@@ -103,6 +103,26 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 .wrong{animation:shake .5s ease!important}
 .disabled{opacity:.35;filter:grayscale(.8);pointer-events:none!important}
 
+/* modo conhecer (bebê) */
+.exp-show{background:rgba(255,255,255,.92);border-radius:6vmin;min-height:24vmin;width:min(92vmin,760px);display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2.5vmin;padding:2.5vmin 5vmin;box-shadow:0 1vmin 0 rgba(0,0,0,.08);animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
+.exp-show svg{width:18vmin;height:18vmin}
+.exp-q{font-size:6vmin;font-weight:600;color:#b9a9e8}
+.exp-big{font-size:15vmin;font-weight:700;color:#ff7043}
+.exp-e{font-size:13vmin}
+.exp-word{font-size:4.6vmin;font-weight:700;color:#8a7fb0;letter-spacing:.4vmin}
+.exp-count{display:flex;gap:1.2vmin;flex-wrap:wrap;justify-content:center;font-size:9vmin;max-width:60vmin}
+.exp-count span{display:inline-block;animation:popIn .4s cubic-bezier(.34,1.56,.64,1) backwards}
+.exp-grid{display:grid;gap:2.5vmin;width:min(94vmin,820px)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g5{grid-template-columns:repeat(5,1fr)}
+.exp-btn{position:relative;border:none;background:#fff;border-radius:4vmin;aspect-ratio:1/1;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 .9vmin 0 rgba(0,0,0,.1),0 1.5vmin 2.5vmin rgba(0,0,0,.08);animation:popIn .5s cubic-bezier(.34,1.56,.64,1) backwards;transition:transform .12s}
+.exp-btn:active{transform:scale(.92)}
+.exp-btn .d{font-size:9.5vmin;font-weight:700;color:var(--ink)}
+.exp-btn .big{font-size:9vmin}
+.exp-btn svg{width:58%;height:58%}
+.exp-btn.found{background:#fff8e1}
+.exp-btn.found::after{content:'⭐';position:absolute;top:-1.8vmin;right:-1.2vmin;font-size:4.5vmin;animation:starPop .5s cubic-bezier(.34,1.56,.64,1)}
+
 /* contar */
 .count-wrap{display:flex;flex-direction:column;align-items:center;gap:5vmin;padding:2vmin}
 .count-box{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:3vmin;max-width:88vmin;background:rgba(255,255,255,.8);border-radius:7vmin;padding:4vmin 5vmin;box-shadow:0 1vmin 0 rgba(0,0,0,.08)}
@@ -307,9 +327,9 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 
     <div class="p-sec">💡 Dicas</div>
     <ul class="tips">
+      <li>O Nível 1 (Conhecer) é só apresentação: a criança toca e o app fala o nome.</li>
       <li>Cada nível abre quando a criança completa as 4 atividades do nível anterior.</li>
       <li>Se ela acertar muito de primeira, a atividade fica mais difícil automaticamente.</li>
-      <li>Se estiver difícil, o app reduz a dificuldade sozinho — ninguém fica frustrado.</li>
       <li>10 a 15 minutos por dia é o ideal para essa idade.</li>
     </ul>
   </div>
@@ -363,7 +383,6 @@ const VOICE={
    };
    load();speechSynthesis.onvoiceschanged=load;
    setTimeout(load,600);setTimeout(load,2000);
-   /* correção Android: a voz às vezes "trava" no meio da frase */
    setInterval(()=>{try{if(speechSynthesis.speaking)speechSynthesis.resume();}catch(e){}},1000);
  },
  best(vs){
@@ -383,7 +402,6 @@ const VOICE={
    if(!text||SFX.muted||!('speechSynthesis'in window))return;
    this.pend=text;
    if(speechSynthesis.speaking||speechSynthesis.pending){
-     /* deixa a frase atual terminar antes de falar a próxima — nada de cortes */
      clearTimeout(this.fb);
      this.fb=setTimeout(()=>this.flush(),4000);
      return;
@@ -401,7 +419,6 @@ const VOICE={
    u.onend=done;u.onerror=done;
    this.cur=u;
    try{speechSynthesis.cancel();}catch(e){}
-   /* pequena pausa após cancel() evita um bug do Chrome que engolia a fala */
    setTimeout(()=>{try{speechSynthesis.speak(u);}catch(e){}},90);
  },
  setVoice(name){
@@ -485,12 +502,32 @@ const LETTERS=[
  {l:'G',w:'Gato',e:'🐱'},{l:'L',w:'Leão',e:'🦁'},{l:'M',w:'Maçã',e:'🍎'},
  {l:'O',w:'Ovo',e:'🥚'},{l:'P',w:'Pato',e:'🦆'},{l:'S',w:'Sapo',e:'🐸'},
  {l:'T',w:'Tartaruga',e:'🐢'},{l:'U',w:'Uva',e:'🍇'},{l:'V',w:'Vaca',e:'🐮'}];
-const VOWELS=[
- {l:'A',it:[{w:'Abelha',e:'🐝'},{w:'Avião',e:'✈️'},{w:'Árvore',e:'🌳'},{w:'Aranha',e:'🕷️'},{w:'Anel',e:'💍'}]},
- {l:'E',it:[{w:'Elefante',e:'🐘'},{w:'Estrela',e:'⭐'},{w:'Escova',e:'🪥'},{w:'Escola',e:'🏫'}]},
- {l:'I',it:[{w:'Igreja',e:'⛪'},{w:'Iguana',e:'🦎'},{w:'Ilha',e:'🏝️'},{w:'Iô-iô',e:'🪀'}]},
- {l:'O',it:[{w:'Ovo',e:'🥚'},{w:'Óculos',e:'👓'},{w:'Ônibus',e:'🚌'},{w:'Ovelha',e:'🐑'}]},
- {l:'U',it:[{w:'Uva',e:'🍇'},{w:'Urso',e:'🐻'},{w:'Unicórnio',e:'🦄'},{w:'Uva-passa',e:'🍇'}]}];
+
+/* ===== modo conhecer (nível bebê) ===== */
+const EXPL_NUMS=[
+ {n:1,w:'um',e:'🎈'},{n:2,w:'dois',e:'🐤'},{n:3,w:'três',e:'⭐'},
+ {n:4,w:'quatro',e:'🍎'},{n:5,w:'cinco',e:'🐠'}].map(x=>({key:x.n,...x}));
+const EXPL_LETTERS=[
+ {l:'A',w:'Abelha',e:'🐝'},{l:'B',w:'Bola',e:'⚽'},{l:'C',w:'Casa',e:'🏠'},
+ {l:'D',w:'Dado',e:'🎲'},{l:'E',w:'Estrela',e:'⭐'},{l:'F',w:'Flor',e:'🌸'},
+ {l:'G',w:'Gato',e:'🐱'},{l:'H',w:'Hipopótamo',e:'🦛'},{l:'I',w:'Igreja',e:'⛪'},
+ {l:'J',w:'Jacaré',e:'🐊'},{l:'K',w:'Kiwi',e:'🥝'},{l:'L',w:'Leão',e:'🦁'},
+ {l:'M',w:'Maçã',e:'🍎'},{l:'N',w:'Navio',e:'🚢'},{l:'O',w:'Ovo',e:'🥚'},
+ {l:'P',w:'Pato',e:'🦆'},{l:'Q',w:'Queijo',e:'🧀'},{l:'R',w:'Rato',e:'🐭'},
+ {l:'S',w:'Sapo',e:'🐸'},{l:'T',w:'Tartaruga',e:'🐢'},{l:'U',w:'Uva',e:'🍇'},
+ {l:'V',w:'Vaca',e:'🐮'},{l:'W',w:'Wafer',e:'🧇'},{l:'X',w:'Xícara',e:'☕'},
+ {l:'Y',w:'Ioga',e:'🧘'},{l:'Z',w:'Zebra',e:'🦓'}].map(x=>({key:x.l,...x}));
+const EXPL_SHAPES=[
+ {key:'circulo',n:'círculo',c:'#ff5252',svg:'<circle cx="50" cy="50" r="40"/>',say:'Esse é o círculo! Ele é redondo como uma bola!'},
+ {key:'quadrado',n:'quadrado',c:'#448aff',svg:'<rect x="14" y="14" width="72" height="72" rx="10"/>',say:'Esse é o quadrado! Ele tem quatro lados iguais!'},
+ {key:'triangulo',n:'triângulo',c:'#4cd964',svg:'<polygon points="50,10 92,86 8,86"/>',say:'Esse é o triângulo! Ele tem três bicos!'},
+ {key:'retangulo',n:'retângulo',c:'#a06bff',svg:'<rect x="8" y="24" width="84" height="52" rx="10"/>',say:'Esse é o retângulo! Ele parece uma porta!'},
+ {key:'estrela',n:'estrela',c:'#ffc93d',svg:'<polygon points="50,5 61.2,34.6 92.8,36.1 68.1,55.9 76.5,86.4 50,69 23.5,86.4 31.9,55.9 7.2,36.1 38.8,34.6"/>',say:'Essa é a estrela! Ela brilha no céu!'},
+ {key:'coracao',n:'coração',c:'#ff7bac',svg:'<path d="M50 88 C20 62 8 42 16 26 C22 12 40 12 50 28 C60 12 78 12 84 26 C92 42 80 62 50 88 Z"/>',say:'Esse é o coração! É a forma do amor!'},
+ {key:'losango',n:'losango',c:'#ff9838',svg:'<polygon points="50,6 92,50 50,94 8,50"/>',say:'Esse é o losango! Ele parece uma pipa!'},
+ {key:'oval',n:'oval',c:'#7ec8ff',svg:'<ellipse cx="50" cy="50" rx="44" ry="30"/>',say:'Esse é o oval! Ele parece um ovo!'}];
+const EXP_TARGET={numbers:5,letters:10,shapes:6,animals:8};
+
 const SYL=[
  {s:'BA',it:[{w:'Banana',e:'🍌'},{w:'Balão',e:'🎈'},{w:'Bola',e:'⚽'}]},
  {s:'BE',it:[{w:'Bebê',e:'👶'},{w:'Beijo',e:'😘'},{w:'Berço',e:'🛏️'}]},
@@ -543,24 +580,29 @@ const PRAISE=['Muito bem!','Parabéns!','Você é demais!','Isso aí!','Que incr
 const TRYAGAIN=['Tente de novo!','Quase! Vamos tentar outra vez!','Hmm, tenta outra vez!'];
 const BURST_E=['🎉','🌟','🥳','✨','🎊','🏅'];
 
-/* ===== a trilha ===== */
+/* ===== a trilha (agora com 5 níveis) ===== */
 const TRILHA=[
- {nome:'Nível 1',sub:'Descobrir',emoji:'🐣',nodes:[
+ {nome:'Nível 1',sub:'Conhecer',emoji:'👶',nodes:[
+   {id:'kNumeros',b:'explore',kind:'numbers',e:'🔢',n:'Números'},
+   {id:'kLetras',b:'explore',kind:'letters',e:'🔤',n:'Letras'},
+   {id:'kFormas',b:'explore',kind:'shapes',e:'🔷',n:'Formas'},
+   {id:'kAnimais',b:'explore',kind:'animals',e:'🐶',n:'Animais'}]},
+ {nome:'Nível 2',sub:'Descobrir',emoji:'🐣',nodes:[
    {id:'animais',b:'animals',e:'🐶',n:'Animais'},
    {id:'cores1',b:'colors',e:'🎨',n:'Cores',t0:0,t1:1},
    {id:'formas',b:'shapes',e:'🔷',n:'Formas'},
    {id:'bolhas',b:'bubbles',e:'🫧',n:'Bolhas'}]},
- {nome:'Nível 2',sub:'Explorar',emoji:'🐥',nodes:[
+ {nome:'Nível 3',sub:'Explorar',emoji:'🐥',nodes:[
    {id:'sombras',b:'shadows',e:'🐾',n:'Sombras'},
    {id:'contar1',b:'count',e:'🔢',n:'Contar',t0:0,t1:1},
    {id:'cores2',b:'colors',e:'🌈',n:'Mais Cores',t0:1,t1:1},
    {id:'vogais',b:'vowels',e:'🔤',n:'Vogais'}]},
- {nome:'Nível 3',sub:'Primeiras Letras',emoji:'🦆',nodes:[
+ {nome:'Nível 4',sub:'Primeiras Letras',emoji:'🦆',nodes:[
    {id:'letras',b:'letters',e:'🅰️',n:'Letras',t0:0,t1:1},
    {id:'silaba',b:'sylStart',e:'🍌',n:'Sílabas',t0:0,t1:1},
    {id:'ler',b:'read',e:'📖',n:'Ler Figuras'},
    {id:'contar2',b:'count',e:'🧮',n:'Contar Mais',t0:1,t1:2}]},
- {nome:'Nível 4',sub:'Formar Palavras',emoji:'🦉',nodes:[
+ {nome:'Nível 5',sub:'Formar Palavras',emoji:'🦉',nodes:[
    {id:'formar',b:'build',e:'🧩',n:'Formar Palavras',t0:0,t1:2},
    {id:'achar',b:'findWord',e:'🔎',n:'Achar Palavras'},
    {id:'rimas',b:'rimas',e:'🎵',n:'Rimas'},
@@ -570,7 +612,15 @@ const nodeById=id=>{for(const lv of TRILHA)for(const n of lv.nodes)if(n.id===id)
 /* ===== progresso adaptativo ===== */
 const Prog={
  d:{name:'',unlocked:1,nodes:{}},
- load(){try{const s=JSON.parse(localStorage.getItem('mm_prog'));if(s)this.d={name:'',unlocked:1,nodes:{},...s};}catch(e){}},
+ load(){
+   try{const s=JSON.parse(localStorage.getItem('mm_prog'));
+     if(s)this.d={name:'',unlocked:1,nodes:{},...s};}catch(e){}
+   /* migração: quem já jogava não perde o progresso com o novo nível */
+   if(!this.d.v){
+     if(this.d.unlocked>1||Object.keys(this.d.nodes||{}).length){
+       this.d.unlocked=Math.min((this.d.unlocked||1)+1,TRILHA.length);}
+     this.d.v=2;this.save();}
+ },
  save(){try{localStorage.setItem('mm_prog',JSON.stringify(this.d));}catch(e){}},
  node(id){return this.d.nodes[id]||(this.d.nodes[id]={p:0,a:0,f:0,tier:null});},
  getTier(id,t0,t1){const n=this.node(id);const t=n.tier==null?t0:Math.max(t0,Math.min(t1,n.tier));return t;},
@@ -586,7 +636,7 @@ Prog.load();
 /* ===== estado ===== */
 const screens={home:$('#home'),game:$('#game'),win:$('#win')};
 const show=n=>{for(const k in screens)screens[k].classList.toggle('hidden',k!==n);};
-const G={base:null,nodeId:null,round:0,total:5,locked:false,firstTry:true,sa:0,sf:0,tier:0,prompt:'',winSay:'',playSound:null,bMiss:0,bi:0,bub:null,confTimer:null};
+const G={base:null,nodeId:null,kind:null,round:0,total:5,locked:false,firstTry:true,sa:0,sf:0,tier:0,prompt:'',winSay:'',playSound:null,bMiss:0,bi:0,bub:null,expFound:null,expTarget:0,confTimer:null};
 
 /* ===== trilha na tela ===== */
 function renderTrilha(){
@@ -629,14 +679,17 @@ $('#startBtn').addEventListener('click',()=>{
 /* ===== fluxo do jogo ===== */
 function startGame(nodeId){
  const nd=nodeById(nodeId);if(!nd)return;
- G.nodeId=nodeId;G.base=nd.b;G.round=0;G.locked=false;G.firstTry=true;
+ G.nodeId=nodeId;G.base=nd.b;G.kind=nd.kind||null;
+ G.round=0;G.locked=false;G.firstTry=true;
  G.sa=0;G.sf=0;G.winSay='';G.playSound=null;
+ G.expFound=new Set();G.expTarget=EXP_TARGET[nd.kind]||0;
  G.tier=Prog.getTier(nodeId,nd.t0||0,nd.t1!=null?nd.t1:(nd.t0||0));
  hideBurst();show('game');buildHud();nextRound();
 }
 function buildHud(){
  const stars=$('#stars');stars.innerHTML='';
- if(G.base==='bubbles'){stars.innerHTML='<div class="chip" id="chip">🫧 0/10</div>';}
+ if(G.base==='explore'){stars.innerHTML=`<div class="chip" id="chip">👆 0/${G.expTarget}</div>`;}
+ else if(G.base==='bubbles'){stars.innerHTML='<div class="chip" id="chip">🫧 0/10</div>';}
  else{for(let i=0;i<G.total;i++){const s=document.createElement('span');
    s.className='star';s.textContent='⭐';stars.appendChild(s);}}
 }
@@ -650,7 +703,7 @@ function nextRound(){
  G.locked=false;G.firstTry=true;
  const f={animals:qAnimals,colors:qColors,shapes:qShapes,count:qCount,shadows:qShadows,
    letters:qLetters,bubbles:startBubbles,vowels:qVowels,sylStart:qSylStart,read:qRead,
-   findWord:qFindWord,build:qBuild,rimas:qRhymes};
+   findWord:qFindWord,build:qBuild,rimas:qRhymes,explore:qExplore};
  if(f[G.base])f[G.base]();
 }
 function setPrompt(t){G.prompt=t;$('#promptText').textContent=t;setTimeout(()=>VOICE.say(t),420);}
@@ -687,6 +740,72 @@ function mkGrid(parent,extra=''){const g=document.createElement('div');g.classNa
 function mkOpt(){const b=document.createElement('button');b.className='opt';return b;}
 function resetStage(){const s=$('#stage');s.className='';s.innerHTML='';return s;}
 
+/* --- modo conhecer: tocar e ouvir --- */
+function qExplore(){
+ const K=G.kind;
+ const stage=resetStage();
+ const wrap=document.createElement('div');wrap.className='v-wrap';
+ const disp=document.createElement('div');disp.className='exp-show';
+ disp.innerHTML='<span class="exp-q">👆 Toque para conhecer!</span>';
+ wrap.appendChild(disp);
+ const CFG={
+   numbers:{cls:'g5',title:'Vamos conhecer os números? Toque em cada um!'},
+   letters:{cls:'g5',title:'Vamos conhecer as letras? Toque em cada uma!'},
+   shapes:{cls:'g4',title:'Vamos conhecer as formas? Toque em cada uma!'},
+   animals:{cls:'g4',title:'Vamos conhecer os animais? Toque em cada um!'}}[K];
+ setPrompt(CFG.title);
+ const grid=document.createElement('div');grid.className='exp-grid '+CFG.cls;
+ let items=[];
+ if(K==='numbers')items=EXPL_NUMS;
+ else if(K==='letters')items=EXPL_LETTERS;
+ else if(K==='shapes')items=EXPL_SHAPES;
+ else items=ANIMALS.map(a=>({key:a.n,...a}));
+ items.forEach((it,i)=>{
+   const b=document.createElement('button');b.className='exp-btn';
+   b.style.animationDelay=(i*.05)+'s';
+   if(K==='numbers')b.innerHTML=`<span class="d">${it.n}</span>`;
+   else if(K==='letters')b.innerHTML=`<span class="d">${it.l}</span>`;
+   else if(K==='shapes')b.innerHTML=`<svg viewBox="0 0 100 100" fill="${it.c}">${it.svg}</svg>`;
+   else b.innerHTML=`<span class="big">${it.e}</span>`;
+   b.addEventListener('click',()=>expTap(b,it,K,disp));
+   grid.appendChild(b);});
+ wrap.appendChild(grid);stage.appendChild(wrap);
+}
+function expTap(b,it,K,disp){
+ if(G.locked)return;
+ SFX.ensure();SFX.pop();
+ b.style.animation='none';void b.offsetWidth;b.style.animation='winJump .6s ease';
+ const isNew=!G.expFound.has(it.key);
+ if(isNew){
+   G.expFound.add(it.key);
+   b.classList.add('found');
+   SFX.star();confetti(10);
+   const chip=$('#chip');if(chip)chip.textContent=`👆 ${G.expFound.size}/${G.expTarget}`;
+ }
+ if(K==='numbers'){
+   let s=`<span class="exp-big">${it.n}</span><span class="exp-count">`;
+   for(let i=0;i<it.n;i++)s+=`<span style="animation-delay:${i*.12}s">${it.e}</span>`;
+   s+='</span>';
+   disp.innerHTML=s;
+   VOICE.say(`Esse é o número ${it.w}!`);
+ }else if(K==='letters'){
+   disp.innerHTML=`<span class="exp-big">${it.l}</span><span class="exp-e">${it.e}</span><span class="exp-word">${it.w}</span>`;
+   VOICE.say(`Essa é a letra ${it.l}! ${it.l} de ${it.w}!`);
+ }else if(K==='shapes'){
+   disp.innerHTML=`<svg viewBox="0 0 100 100" fill="${it.c}">${it.svg}</svg><span class="exp-word">${cap(it.n)}</span>`;
+   VOICE.say(it.say);
+ }else{
+   disp.innerHTML=`<span class="exp-e">${it.e}</span><span class="exp-word">${cap(it.n)}</span>`;
+   VOICE.say(`Esse é ${it.a} ${it.n}!`);
+   setTimeout(()=>playAnimal(it.n),1100);
+ }
+ if(isNew&&G.expFound.size>=G.expTarget){
+   G.locked=true;
+   setTimeout(celebrate,1400);
+ }
+}
+
+/* --- demais atividades --- */
 function qAnimals(){
  const pool=shuffle(ANIMALS),target=pool[0],opts=shuffle(pool.slice(0,4));
  const stage=resetStage();
@@ -965,6 +1084,9 @@ function celebrate(){
  if(newLevel){
    $('#winText').textContent=`${TRILHA[li].nome} completo! Você abriu o ${newLevel.nome}! 🎉`;
    setTimeout(()=>VOICE.say(`Incrível${nm}! Você completou o nível e desbloqueou ${newLevel.nome} ${newLevel.sub}!`),500);
+ }else if(G.base==='explore'){
+   $('#winText').textContent='Você conheceu tudo! 🎉';
+   setTimeout(()=>VOICE.say(`Parabéns${nm}! Que demais! Você conheceu tudo!`),500);
  }else if(G.base==='bubbles'){
    $('#winText').textContent='Você estourou todas as bolhas!';
    setTimeout(()=>VOICE.say(`Uau${nm}! Você estourou todas as bolhas! Parabéns!`),500);
@@ -1033,14 +1155,14 @@ $('#resetProg').addEventListener('click',()=>{
  renderTrilha();renderProg();toast('Jornada reiniciada!');});
 function renderProg(){
  const box=$('#progBox');
- let html='<table class="stats"><tr><th>Atividade</th><th>Vezes</th><th>⭐</th><th>Sem erros</th><th>Dificuldade</th></tr>';
+ let html='<table class="stats"><tr><th>Atividade</th><th>Vezes</th><th>⭐</th><th>Sem erros</th><th>Nível</th></tr>';
  let any=false;
  TRILHA.forEach(lv=>lv.nodes.forEach(nd=>{
    const st=Prog.node(nd.id);
    if(st.p>0){any=true;
      const t0=nd.t0||0,t1=nd.t1!=null?nd.t1:t0;
      const cur=Prog.getTier(nd.id,t0,t1);
-     const lvl=['😊 Fácil','🙂 Média','🤓 Difícil'][cur]||('Nv '+(cur+1));
+     const lvl=nd.b==='explore'?'👶 Bebê':(['😊 Fácil','🙂 Média','🤓 Difícil'][cur]||('Nv '+(cur+1)));
      html+=`<tr><td>${nd.e} ${nd.n}</td><td>${st.p}</td><td>${st.p*5}</td><td>${st.f}/${st.a}</td><td>${lvl}</td></tr>`;}}));
  box.innerHTML=any?html+'</table>':'<p class="p-note">Ainda não há jogadas. Vá brincar com a criança! 😄</p>';
 }
