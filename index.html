@@ -164,7 +164,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 .p-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:2vmin}
 .p-title{font-size:6vmin;font-weight:700}
 .p-x{border:none;background:#f1f0f7;width:10vmin;height:10vmin;min-width:44px;min-height:44px;border-radius:50%;font-size:4.5vmin;cursor:pointer}
-.p-note{font-size:3.6vmin;color:#8a7fb0;margin-top:1vmin}
+.p-note{font-size:3.6vmin;color:#8a7fb0;margin-top:1vmin;line-height:1.5}
 .p-q{font-size:6vmin;font-weight:600;margin:3vmin 0 4vmin}
 .p-opts{display:flex;justify-content:center;gap:4vmin}
 .p-num{width:16vmin;height:16vmin;min-width:70px;min-height:70px;border-radius:50%;border:none;background:#eef2ff;font-family:inherit;font-size:7vmin;font-weight:700;color:var(--ink);cursor:pointer;box-shadow:0 .8vmin 0 rgba(0,0,0,.12)}
@@ -182,6 +182,8 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 .stats td:first-child{text-align:left;font-weight:600}
 .tips{font-size:3.8vmin;line-height:1.6;padding-left:5vmin;color:#5c5470}
 .toast{position:fixed;left:50%;bottom:8vmin;transform:translateX(-50%);background:#4a3f6b;color:#fff;padding:2.5vmin 5vmin;border-radius:4vmin;z-index:20;font-size:4vmin;animation:popIn .4s;white-space:nowrap}
+.voice-box{background:#eef4ff;border-radius:4vmin;padding:3vmin;font-size:3.9vmin}
+.voice-sel{font-family:inherit;font-size:4vmin;padding:2vmin;border-radius:3vmin;border:.4vmin solid #d9d4ea;width:100%;max-width:74vmin;background:#fff;margin-bottom:2vmin}
 
 /* animações */
 @keyframes popIn{0%{transform:scale(0)}75%{transform:scale(1.1)}100%{transform:scale(1)}}
@@ -278,6 +280,17 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
       <button id="saveName" class="big-btn blue small">Salvar</button>
     </div>
 
+    <div class="p-sec">🗣️ Voz do aplicativo</div>
+    <div class="voice-box">
+      <select id="voiceSel" class="voice-sel"></select><br>
+      <button id="voiceTest" class="big-btn blue small">🔊 Testar voz</button>
+      <p class="p-note">Escolha vozes com "Natural", "Neural" ou "Google" no nome — são menos robóticas.
+      Se não houver boas opções no aparelho: instale na Play Store o app
+      <b>"Speech Services by Google" (Serviços de voz do Google)</b>, depois vá em
+      Configurações do Android → Sistema → Idiomas → <b>Conversão de texto em fala</b>
+      e baixe a voz em português.</p>
+    </div>
+
     <div class="p-sec">📲 Instalar como aplicativo</div>
     <div class="install-box">
       <p id="installHelp"></p>
@@ -332,6 +345,72 @@ const SFX={ctx:null,muted:false,
  bubble(){this.tone(rand(850,1150),.13,'sine',0,.22,320)},
  star(){this.tone(1319,.12,'triangle',0,.2);this.tone(1760,.2,'triangle',.1,.2)}};
 
+/* ===== voz — lenta, sem cortes, melhor voz disponível ===== */
+const VOICE={
+ voice:null,rate:.82,pitch:1.12,cur:null,pend:null,fb:null,manual:false,
+ init(){
+   if(!('speechSynthesis'in window))return;
+   const load=()=>{
+     const vs=speechSynthesis.getVoices();
+     if(!vs.length)return;
+     if(!this.manual){
+       let saved=null;
+       try{saved=localStorage.getItem('mm_voice');}catch(e){}
+       const sv=saved?vs.find(v=>v.name===saved):null;
+       if(sv){this.voice=sv;this.manual=true;}
+       else this.voice=this.best(vs);
+     }
+   };
+   load();speechSynthesis.onvoiceschanged=load;
+   setTimeout(load,600);setTimeout(load,2000);
+   /* correção Android: a voz às vezes "trava" no meio da frase */
+   setInterval(()=>{try{if(speechSynthesis.speaking)speechSynthesis.resume();}catch(e){}},1000);
+ },
+ best(vs){
+   const pt=vs.filter(v=>(v.lang||'').toLowerCase().startsWith('pt'));
+   if(!pt.length)return null;
+   const score=v=>{
+     const n=(v.name||'').toLowerCase();let s=0;
+     if(n.includes('natural')||n.includes('neural'))s+=100;
+     if(n.includes('google'))s+=60;
+     if(/francisca|antonio|antônio|thalita|luciana|felipe|maria|nicolau/.test(n))s+=40;
+     if((v.lang||'').toLowerCase().replace('_','-')==='pt-br')s+=20;
+     if(n.includes('desktop')||n.includes('legacy'))s-=30;
+     return s;};
+   return [...pt].sort((a,b)=>score(b)-score(a))[0];
+ },
+ say(text){
+   if(!text||SFX.muted||!('speechSynthesis'in window))return;
+   this.pend=text;
+   if(speechSynthesis.speaking||speechSynthesis.pending){
+     /* deixa a frase atual terminar antes de falar a próxima — nada de cortes */
+     clearTimeout(this.fb);
+     this.fb=setTimeout(()=>this.flush(),4000);
+     return;
+   }
+   this.flush();
+ },
+ flush(){
+   const text=this.pend;if(!text)return;
+   this.pend=null;clearTimeout(this.fb);
+   const u=new SpeechSynthesisUtterance(text);
+   if(this.voice)u.voice=this.voice;
+   u.lang=(this.voice&&this.voice.lang)||'pt-BR';
+   u.rate=this.rate;u.pitch=this.pitch;
+   const done=()=>{if(this.cur===u){this.cur=null;if(this.pend)this.flush();}};
+   u.onend=done;u.onerror=done;
+   this.cur=u;
+   try{speechSynthesis.cancel();}catch(e){}
+   /* pequena pausa após cancel() evita um bug do Chrome que engolia a fala */
+   setTimeout(()=>{try{speechSynthesis.speak(u);}catch(e){}},90);
+ },
+ setVoice(name){
+   const v=speechSynthesis.getVoices().find(x=>x.name===name);
+   if(v){this.voice=v;this.manual=true;
+     try{localStorage.setItem('mm_voice',name);}catch(e){}}
+ }};
+VOICE.init();
+
 /* ===== sons de animais ===== */
 const AnimalSFX={nb:null,
  buf(){if(!this.nb&&SFX.ctx){const c=SFX.ctx,b=c.createBuffer(1,c.sampleRate,c.sampleRate);
@@ -377,20 +456,6 @@ const AnimalSFX={nb:null,
  'macaco'(){[400,300,440,330].forEach((f,i)=>this.T(f,f*.85,.13,'sine',.22,i*.17));}};
 const playAnimal=n=>{SFX.ensure();if(AnimalSFX[n])AnimalSFX[n]();};
 
-/* ===== voz ===== */
-const VOICE={voice:null,
- init(){if(!('speechSynthesis'in window))return;
-   const load=()=>{const vs=speechSynthesis.getVoices();
-     this.voice=vs.find(v=>v.lang==='pt-BR')||vs.find(v=>(v.lang||'').startsWith('pt'))||null;};
-   load();speechSynthesis.onvoiceschanged=load;},
- say(text){if(!text||SFX.muted||!('speechSynthesis'in window))return;
-   speechSynthesis.cancel();
-   const u=new SpeechSynthesisUtterance(text);
-   if(this.voice)u.voice=this.voice;
-   u.lang='pt-BR';u.rate=.95;u.pitch=1.15;
-   setTimeout(()=>speechSynthesis.speak(u),60);}};
-VOICE.init();
-
 /* ===== conteúdo ===== */
 const ANIMALS=[
  {e:'🐶',n:'cachorro',a:'o'},{e:'🐱',n:'gato',a:'o'},{e:'🐮',n:'vaca',a:'a'},
@@ -432,8 +497,8 @@ const SYL=[
  {s:'BO',it:[{w:'Bolo',e:'🍰'},{w:'Boca',e:'👄'},{w:'Bola',e:'⚽'}]},
  {s:'CA',it:[{w:'Casa',e:'🏠'},{w:'Carro',e:'🚗'},{w:'Cama',e:'🛏️'}]},
  {s:'CO',it:[{w:'Coração',e:'❤️'},{w:'Coelho',e:'🐰'},{w:'Coroa',e:'👑'}]},
- {s:'DA',it:[{w:'Dado',e:'🎲'},{w:'Dedo',e:'☝️'},{w:'Datilografia',e:'⌨️'}]},
- {s:'FA',it:[{w:'Fada',e:'🧚'},{w:'Faca',e:'🔪'},{w:'Fantoche',e:'🎭'}]},
+ {s:'DA',it:[{w:'Dado',e:'🎲'},{w:'Dedo',e:'☝️'},{w:'Data',e:'📅'}]},
+ {s:'FA',it:[{w:'Fada',e:'🧚'},{w:'Faca',e:'🔪'},{w:'Fantasia',e:'🎭'}]},
  {s:'GA',it:[{w:'Gato',e:'🐱'},{w:'Galinha',e:'🐔'},{w:'Garrafa',e:'🍼'}]},
  {s:'JA',it:[{w:'Jacaré',e:'🐊'},{w:'Jaqueta',e:'🧥'},{w:'Janela',e:'🪟'}]},
  {s:'LA',it:[{w:'Laranja',e:'🍊'},{w:'Lápis',e:'✏️'},{w:'Lã',e:'🧶'}]},
@@ -445,12 +510,12 @@ const SYL=[
  {s:'PA',it:[{w:'Pato',e:'🦆'},{w:'Pão',e:'🍞'},{w:'Panela',e:'🍲'}]},
  {s:'PE',it:[{w:'Peixe',e:'🐟'},{w:'Pera',e:'🍐'},{w:'Pé',e:'🦶'}]},
  {s:'PI',it:[{w:'Pintinho',e:'🐤'},{w:'Pipoca',e:'🍿'},{w:'Pião',e:'🪀'}]},
- {s:'SA',it:[{w:'Sapo',e:'🐸'},{w:'Sapato',e:'👟'},{w:'Sol',e:'☀️'}]},
+ {s:'SA',it:[{w:'Sapo',e:'🐸'},{w:'Sapato',e:'👟'},{w:'Saia',e:'👗'}]},
  {s:'SO',it:[{w:'Sorvete',e:'🍦'},{w:'Sino',e:'🔔'},{w:'Sopa',e:'🍲'}]},
  {s:'TA',it:[{w:'Tartaruga',e:'🐢'},{w:'Tambor',e:'🥁'},{w:'Táxi',e:'🚕'}]},
  {s:'TE',it:[{w:'Telefone',e:'📞'},{w:'Tesoura',e:'✂️'},{w:'Tela',e:'📺'}]},
  {s:'VA',it:[{w:'Vaca',e:'🐮'},{w:'Vassoura',e:'🧹'},{w:'Vela',e:'🕯️'}]},
- {s:'VI',it:[{w:'Violão',e:'🎸'},{w:'Vidro',e:'🪟'},{w:'Vitória-régia',e:'🪷'}]}];
+ {s:'VI',it:[{w:'Violão',e:'🎸'},{w:'Videogame',e:'🎮'},{w:'Vitória-régia',e:'🪷'}]}];
 const READ_WORDS=[
  {w:'BANANA',e:'🍌'},{w:'BOLA',e:'⚽'},{w:'CASA',e:'🏠'},{w:'GATO',e:'🐱'},
  {w:'PATO',e:'🦆'},{w:'VACA',e:'🐮'},{w:'SAPO',e:'🐸'},{w:'SOL',e:'☀️'},
@@ -536,7 +601,7 @@ function renderTrilha(){
    const head=document.createElement('div');head.className='lv-head';
    head.innerHTML=`<span class="lv-emoji">${lv.emoji}</span>
      <div class="lv-tt"><b>${lv.nome}</b><small>${lv.sub}</small></div>
-     <span class="lv-mark">${open?(done?'✅':''): '🔒'}</span>`;
+     <span class="lv-mark">${open?(done?'✅':''):'🔒'}</span>`;
    sec.appendChild(head);
    const grid=document.createElement('div');grid.className='lv-grid';
    lv.nodes.forEach((nd,i)=>{
@@ -599,7 +664,7 @@ function answer(btn,isRight,setWin){
    if(setWin)setWin();
    G.sa++;if(G.firstTry)G.sf++;
    SFX.good();earnStar();confetti(45);showBurst();
-   setTimeout(()=>{hideBurst();G.round++;nextRound();},2200);
+   setTimeout(()=>{hideBurst();G.round++;nextRound();},2400);
  }else{
    G.firstTry=false;
    btn.classList.add('wrong','disabled');
@@ -612,7 +677,7 @@ function showBurst(){
  const txt=pick(PRAISE);
  b.querySelector('.burst-text').textContent=txt;
  b.classList.add('show');
- if(G.playSound){const f=G.playSound;G.playSound=null;f();setTimeout(()=>VOICE.say(G.winSay||txt),950);}
+ if(G.playSound){const f=G.playSound;G.playSound=null;f();setTimeout(()=>VOICE.say(G.winSay||txt),1000);}
  else VOICE.say(G.winSay||txt);
 }
 function hideBurst(){$('#burst').classList.remove('show');G.winSay='';G.playSound=null;}
@@ -823,7 +888,7 @@ function qBuild(){
          G.sa++;if(G.bMiss===0)G.sf++;
          G.winSay=`${word.w}! Muito bem! Você formou a palavra!`;
          setTimeout(()=>{SFX.good();earnStar();confetti(45);showBurst();
-           setTimeout(()=>{hideBurst();G.round++;nextRound();},2200);},400);
+           setTimeout(()=>{hideBurst();G.round++;nextRound();},2400);},500);
        }
      }else{
        G.bMiss++;t.classList.add('wrong');
@@ -909,13 +974,13 @@ function celebrate(){
  }
  show('win');
 }
-function goHome(){speechSynthesis.cancel();clearInterval(G.confTimer);SFX.click();show('home');renderTrilha();}
+function goHome(){try{speechSynthesis.cancel();}catch(e){}clearInterval(G.confTimer);SFX.click();show('home');renderTrilha();}
 $('#againBtn').addEventListener('click',()=>{clearInterval(G.confTimer);SFX.ensure();SFX.pop();startGame(G.nodeId);});
 $('#homeBtn2').addEventListener('click',goHome);
 $('#homeBtn').addEventListener('click',goHome);
 $('#muteBtn').addEventListener('click',()=>{
  SFX.ensure();SFX.muted=!SFX.muted;
- if(SFX.muted&&('speechSynthesis'in window))speechSynthesis.cancel();
+ if(SFX.muted&&('speechSynthesis'in window))try{speechSynthesis.cancel();}catch(e){}
  $('#muteBtn').textContent=SFX.muted?'🔇':'🔊';
  if(!SFX.muted)SFX.click();});
 
@@ -950,7 +1015,7 @@ function genGateQ(){
        setTimeout(genGateQ,500);}});
    box.appendChild(bt);});
 }
-function openPanel(){renderProg();updateInstallBox();
+function openPanel(){renderProg();updateInstallBox();fillVoices();
  $('#childName').value=Prog.d.name||'';$('#pPanel').classList.remove('hidden');}
 $('#pClose').addEventListener('click',()=>$('#pPanel').classList.add('hidden'));
 $('#saveName').addEventListener('click',()=>{
@@ -979,6 +1044,23 @@ function renderProg(){
      html+=`<tr><td>${nd.e} ${nd.n}</td><td>${st.p}</td><td>${st.p*5}</td><td>${st.f}/${st.a}</td><td>${lvl}</td></tr>`;}}));
  box.innerHTML=any?html+'</table>':'<p class="p-note">Ainda não há jogadas. Vá brincar com a criança! 😄</p>';
 }
+
+/* ===== seleção de voz ===== */
+function fillVoices(){
+ const sel=$('#voiceSel');sel.innerHTML='';
+ if(!('speechSynthesis'in window)){sel.innerHTML='<option>Indisponível neste navegador</option>';return;}
+ const vs=speechSynthesis.getVoices().filter(v=>(v.lang||'').toLowerCase().startsWith('pt'));
+ if(!vs.length){sel.innerHTML='<option>Voz padrão do aparelho</option>';return;}
+ [...vs].sort((a,b)=>(a.name||'').localeCompare(b.name||'')).forEach(v=>{
+   const o=document.createElement('option');o.value=v.name;o.textContent=v.name;
+   sel.appendChild(o);});
+ if(VOICE.voice)sel.value=VOICE.voice.name;
+}
+$('#voiceSel').addEventListener('change',()=>{
+ VOICE.setVoice($('#voiceSel').value);
+ VOICE.say('Olá! Eu sou o Léo! Vamos brincar e aprender juntos!');});
+$('#voiceTest').addEventListener('click',()=>{SFX.ensure();
+ VOICE.say('Olá! Eu sou o Léo! Gosto muito de brincar com você! Vamos aprender as letras, os números e as cores?');});
 
 /* ===== instalação (PWA) ===== */
 let deferredPrompt=null;
