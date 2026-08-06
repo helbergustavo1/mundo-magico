@@ -1,4 +1,4 @@
-const CACHE = 'mundo-magico-v6';
+const CACHE = 'mundo-magico-v7';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', e => {
