@@ -105,6 +105,14 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 .wrong{animation:shake .5s ease!important}
 .disabled{opacity:.35;filter:grayscale(.8);pointer-events:none!important}
 
+/* ilustrações dos animais */
+.art{display:inline-block;line-height:0}
+.art svg{width:100%;height:100%;display:block}
+.opt .big .art{width:16vmin;height:16vmin}
+.exp-btn .art{width:76%;height:76%}
+.art-show{width:16vmin;height:16vmin}
+.shadow-e svg{width:18vmin;height:18vmin;display:block}
+
 /* modo conhecer (bebê) */
 .exp-show{background:rgba(255,255,255,.92);border-radius:6vmin;min-height:24vmin;width:min(92vmin,760px);display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2.5vmin;padding:2.5vmin 5vmin;box-shadow:0 1vmin 0 rgba(0,0,0,.08);animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
 .exp-show svg{width:18vmin;height:18vmin}
@@ -486,7 +494,7 @@ const VOICE={
  }};
 VOICE.init();
 
-/* ===== sons de animais ===== */
+/* ===== sons de animais (sintetizados — reserva) ===== */
 const AnimalSFX={nb:null,
  buf(){if(!this.nb&&SFX.ctx){const c=SFX.ctx,b=c.createBuffer(1,c.sampleRate,c.sampleRate);
    const d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;this.nb=b;}return this.nb;},
@@ -529,7 +537,169 @@ const AnimalSFX={nb:null,
  'galinha'(){[620,700,620,780,950].forEach((q,i)=>this.T(q,q*.8,.07,'square',.13,i*.11,{lp:2200}));},
  'elefante'(){this.T(170,330,.45,'sawtooth',.3,0,{lp:1800});this.T(330,150,.4,'sawtooth',.3,.4,{lp:1800});this.T(90,60,.8,'square',.1,.05);},
  'macaco'(){[400,300,440,330].forEach((f,i)=>this.T(f,f*.85,.13,'sine',.22,i*.17));}};
-const playAnimal=n=>{SFX.ensure();if(AnimalSFX[n])AnimalSFX[n]();};
+
+/* ===== SONS REAIS: toca som-*.mp3 se existir; senão usa o sintetizado ===== */
+const REAL_SOUNDS={
+ 'cachorro':'som-cachorro.mp3','gato':'som-gato.mp3','vaca':'som-vaca.mp3',
+ 'porco':'som-porco.mp3','sapo':'som-sapo.mp3','leão':'som-leao.mp3',
+ 'cavalo':'som-cavalo.mp3','pato':'som-pato.mp3','ovelha':'som-ovelha.mp3',
+ 'galinha':'som-galinha.mp3','elefante':'som-elefante.mp3','macaco':'som-macaco.mp3'};
+const RealSFX={cache:{},ok:{},
+ avail(name,cb){
+   if(name in this.ok)return cb(this.ok[name]);
+   const src=REAL_SOUNDS[name];
+   if(!src)return cb(false);
+   fetch(src,{method:'HEAD'}).then(r=>{this.ok[name]=r.ok;cb(r.ok);})
+     .catch(()=>{this.ok[name]=false;cb(false);});
+ },
+ play(name){
+   if(SFX.muted)return;
+   this.avail(name,has=>{
+     if(has){
+       const a=this.cache[name]||(this.cache[name]=new Audio(REAL_SOUNDS[name]));
+       a.volume=.9;a.currentTime=0;
+       a.play().catch(()=>{if(AnimalSFX[name])AnimalSFX[name]();});
+     }else if(AnimalSFX[name])AnimalSFX[name]();
+   });
+ }};
+const playAnimal=n=>{SFX.ensure();RealSFX.play(n);};
+
+/* ===== ILUSTRAÇÕES: estilo livro infantil ===== */
+const ART={
+'cachorro':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grCAO" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#eec27f"/><stop offset="100%" stop-color="#c98a4b"/></radialGradient></defs>
+<ellipse cx="27" cy="55" rx="13" ry="22" fill="#a5683a" transform="rotate(16 27 55)"/>
+<ellipse cx="93" cy="55" rx="13" ry="22" fill="#a5683a" transform="rotate(-16 93 55)"/>
+<circle cx="60" cy="60" r="38" fill="url(#grCAO)"/>
+<ellipse cx="60" cy="77" rx="19" ry="14" fill="#f9ead2"/>
+<ellipse cx="60" cy="70" rx="7" ry="5.5" fill="#4a3325"/>
+<path d="M60 76 q0 7 -9 9 M60 76 q0 7 9 9" stroke="#4a3325" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+<circle cx="44" cy="53" r="5.2" fill="#33241a"/><circle cx="76" cy="53" r="5.2" fill="#33241a"/>
+<circle cx="45.8" cy="51.2" r="1.7" fill="#fff"/><circle cx="77.8" cy="51.2" r="1.7" fill="#fff"/>
+<ellipse cx="35" cy="66" rx="5.5" ry="3.2" fill="#f2a6a0" opacity=".55"/><ellipse cx="85" cy="66" rx="5.5" ry="3.2" fill="#f2a6a0" opacity=".55"/></svg>`,
+'gato':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grGAT" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#f6b26a"/><stop offset="100%" stop-color="#e07f2e"/></radialGradient></defs>
+<polygon points="28,40 20,8 50,24" fill="#e07f2e"/><polygon points="30,33 26,16 44,25" fill="#f9cfa4"/>
+<polygon points="92,40 100,8 70,24" fill="#e07f2e"/><polygon points="90,33 94,16 76,25" fill="#f9cfa4"/>
+<circle cx="60" cy="64" r="36" fill="url(#grGAT)"/>
+<path d="M47 31 q4 9 0 15 M60 28 q3 10 0 17 M73 31 q-4 9 0 15" stroke="#c96a22" stroke-width="4" fill="none" stroke-linecap="round"/>
+<circle cx="45" cy="60" r="5.2" fill="#2e4a1f"/><circle cx="75" cy="60" r="5.2" fill="#2e4a1f"/>
+<circle cx="46.8" cy="58.2" r="1.7" fill="#fff"/><circle cx="76.8" cy="58.2" r="1.7" fill="#fff"/>
+<polygon points="55,66 65,66 60,72" fill="#e2708a"/>
+<path d="M60 72 q0 6 -7 7 M60 72 q0 6 7 7" stroke="#8a4a20" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M30 66 l-16 -2 M30 72 l-16 2 M90 66 l16 -2 M90 72 l16 2" stroke="#c96a22" stroke-width="2" stroke-linecap="round"/>
+<ellipse cx="38" cy="72" rx="5" ry="3" fill="#f2a6a0" opacity=".5"/><ellipse cx="82" cy="72" rx="5" ry="3" fill="#f2a6a0" opacity=".5"/></svg>`,
+'vaca':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grVAC" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#fdfaf4"/><stop offset="100%" stop-color="#e5dccb"/></radialGradient></defs>
+<ellipse cx="22" cy="48" rx="14" ry="9" fill="#e8e0d2" transform="rotate(-15 22 48)"/>
+<ellipse cx="98" cy="48" rx="14" ry="9" fill="#e8e0d2" transform="rotate(15 98 48)"/>
+<ellipse cx="22" cy="48" rx="7" ry="4" fill="#f2c4cf" transform="rotate(-15 22 48)"/>
+<ellipse cx="98" cy="48" rx="7" ry="4" fill="#f2c4cf" transform="rotate(15 98 48)"/>
+<circle cx="60" cy="58" r="38" fill="url(#grVAC)"/>
+<ellipse cx="40" cy="40" rx="13" ry="10" fill="#57493e" transform="rotate(-18 40 40)"/>
+<ellipse cx="82" cy="34" rx="10" ry="8" fill="#57493e" transform="rotate(14 82 34)"/>
+<circle cx="44" cy="56" r="5" fill="#3a2f26"/><circle cx="76" cy="56" r="5" fill="#3a2f26"/>
+<circle cx="45.6" cy="54.4" r="1.6" fill="#fff"/><circle cx="77.6" cy="54.4" r="1.6" fill="#fff"/>
+<ellipse cx="60" cy="80" rx="23" ry="15" fill="#f2b3c2"/>
+<ellipse cx="52" cy="79" rx="3" ry="4.5" fill="#c9708a"/><ellipse cx="68" cy="79" rx="3" ry="4.5" fill="#c9708a"/>
+<path d="M52 89 q8 5 16 0" stroke="#c9708a" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>`,
+'porco':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grPOR" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#f9c3d0"/><stop offset="100%" stop-color="#ec94aa"/></radialGradient></defs>
+<polygon points="32,28 22,6 48,16" fill="#e795a8"/><polygon points="88,28 98,6 72,16" fill="#e795a8"/>
+<polygon points="33,24 28,12 43,17" fill="#d4708c"/><polygon points="87,24 92,12 77,17" fill="#d4708c"/>
+<circle cx="60" cy="62" r="38" fill="url(#grPOR)"/>
+<circle cx="44" cy="54" r="5" fill="#4a2c33"/><circle cx="76" cy="54" r="5" fill="#4a2c33"/>
+<circle cx="45.6" cy="52.4" r="1.6" fill="#fff"/><circle cx="77.6" cy="52.4" r="1.6" fill="#fff"/>
+<ellipse cx="60" cy="74" rx="17" ry="13" fill="#e5839d"/>
+<ellipse cx="54" cy="74" rx="2.8" ry="4.5" fill="#a34d61"/><ellipse cx="66" cy="74" rx="2.8" ry="4.5" fill="#a34d61"/>
+<ellipse cx="34" cy="66" rx="5.5" ry="3.2" fill="#e06a86" opacity=".5"/><ellipse cx="86" cy="66" rx="5.5" ry="3.2" fill="#e06a86" opacity=".5"/>
+<path d="M48 92 q12 6 24 0" stroke="#c96a84" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>`,
+'sapo':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grSAP" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#9cd96e"/><stop offset="100%" stop-color="#63a83e"/></radialGradient></defs>
+<circle cx="36" cy="28" r="15" fill="#7cc24f"/><circle cx="84" cy="28" r="15" fill="#7cc24f"/>
+<circle cx="36" cy="28" r="9" fill="#fff"/><circle cx="84" cy="28" r="9" fill="#fff"/>
+<circle cx="36" cy="29" r="4.5" fill="#28421b"/><circle cx="84" cy="29" r="4.5" fill="#28421b"/>
+<circle cx="37.5" cy="27.5" r="1.5" fill="#fff"/><circle cx="85.5" cy="27.5" r="1.5" fill="#fff"/>
+<ellipse cx="60" cy="70" rx="44" ry="34" fill="url(#grSAP)"/>
+<circle cx="52" cy="52" r="1.8" fill="#28421b"/><circle cx="68" cy="52" r="1.8" fill="#28421b"/>
+<path d="M34 68 q26 18 52 0" stroke="#28421b" stroke-width="3" fill="none" stroke-linecap="round"/>
+<ellipse cx="30" cy="76" rx="6" ry="3.5" fill="#e88a7a" opacity=".5"/><ellipse cx="90" cy="76" rx="6" ry="3.5" fill="#e88a7a" opacity=".5"/></svg>`,
+'leão':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grLEA" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#f6c983"/><stop offset="100%" stop-color="#e09a4a"/></radialGradient></defs>
+<g fill="#c9752e">
+<circle cx="60" cy="14" r="13"/><circle cx="87" cy="23" r="13"/><circle cx="104" cy="46" r="13"/><circle cx="104" cy="74" r="13"/>
+<circle cx="87" cy="97" r="13"/><circle cx="60" cy="106" r="13"/><circle cx="33" cy="97" r="13"/><circle cx="16" cy="74" r="13"/>
+<circle cx="16" cy="46" r="13"/><circle cx="33" cy="23" r="13"/><circle cx="60" cy="60" r="46"/>
+</g>
+<circle cx="60" cy="62" r="34" fill="url(#grLEA)"/>
+<ellipse cx="60" cy="76" rx="16" ry="12" fill="#f9e6c4"/>
+<circle cx="46" cy="58" r="5" fill="#3a2a1a"/><circle cx="74" cy="58" r="5" fill="#3a2a1a"/>
+<circle cx="47.6" cy="56.4" r="1.6" fill="#fff"/><circle cx="75.6" cy="56.4" r="1.6" fill="#fff"/>
+<polygon points="54,70 66,70 60,78" fill="#6b4226"/>
+<path d="M60 78 q0 6 -7 7 M60 78 q0 6 7 7" stroke="#6b4226" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<ellipse cx="38" cy="70" rx="5" ry="3" fill="#f2a06a" opacity=".6"/><ellipse cx="82" cy="70" rx="5" ry="3" fill="#f2a06a" opacity=".6"/></svg>`,
+'cavalo':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grCAV" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#c08a55"/><stop offset="100%" stop-color="#8f5c33"/></radialGradient></defs>
+<polygon points="38,26 30,4 50,16" fill="#8f5c33"/><polygon points="82,26 90,4 70,16" fill="#8f5c33"/>
+<polygon points="39,22 35,9 47,16" fill="#5c3a1e"/><polygon points="81,22 85,9 73,16" fill="#5c3a1e"/>
+<ellipse cx="60" cy="62" rx="32" ry="42" fill="url(#grCAV)"/>
+<path d="M44 22 q16 -10 32 0 q-6 8 -16 7 q-10 1 -16 -7z" fill="#5c3a1e"/>
+<path d="M46 26 q-8 18 -4 34" stroke="#5c3a1e" stroke-width="7" fill="none" stroke-linecap="round"/>
+<ellipse cx="60" cy="88" rx="20" ry="14" fill="#e3c39c"/>
+<ellipse cx="53" cy="86" rx="2.6" ry="3.6" fill="#7a5232"/><ellipse cx="67" cy="86" rx="2.6" ry="3.6" fill="#7a5232"/>
+<path d="M53 96 q7 5 14 0" stroke="#7a5232" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<circle cx="44" cy="56" r="5.5" fill="#2e2016"/><circle cx="76" cy="56" r="5.5" fill="#2e2016"/>
+<circle cx="45.8" cy="54.2" r="1.8" fill="#fff"/><circle cx="77.8" cy="54.2" r="1.8" fill="#fff"/></svg>`,
+'pato':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grPAT" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#ffe27a"/><stop offset="100%" stop-color="#f5b81e"/></radialGradient></defs>
+<path d="M60 16 q6 -8 12 -4 q-4 6 -8 8" fill="#f5b81e"/>
+<circle cx="60" cy="60" r="38" fill="url(#grPAT)"/>
+<circle cx="44" cy="52" r="5.5" fill="#3a2f14"/><circle cx="76" cy="52" r="5.5" fill="#3a2f14"/>
+<circle cx="45.8" cy="50.2" r="1.8" fill="#fff"/><circle cx="77.8" cy="50.2" r="1.8" fill="#fff"/>
+<ellipse cx="60" cy="74" rx="19" ry="11" fill="#f5941e"/>
+<path d="M44 72 q16 6 32 0" stroke="#c96f10" stroke-width="2" fill="none" stroke-linecap="round"/>
+<circle cx="54" cy="69" r="1.5" fill="#c96f10"/><circle cx="66" cy="69" r="1.5" fill="#c96f10"/>
+<ellipse cx="35" cy="64" rx="5.5" ry="3.2" fill="#f2a06a" opacity=".55"/><ellipse cx="85" cy="64" rx="5.5" ry="3.2" fill="#f2a06a" opacity=".55"/></svg>`,
+'ovelha':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grOVE" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#d9b48f"/><stop offset="100%" stop-color="#bd8f63"/></radialGradient></defs>
+<g fill="#fbf6ec">
+<circle cx="30" cy="34" r="15"/><circle cx="60" cy="24" r="16"/><circle cx="90" cy="34" r="15"/>
+<circle cx="20" cy="60" r="14"/><circle cx="100" cy="60" r="14"/>
+<circle cx="28" cy="86" r="14"/><circle cx="92" cy="86" r="14"/><circle cx="60" cy="96" r="15"/><circle cx="60" cy="60" r="40"/>
+</g>
+<ellipse cx="26" cy="58" rx="11" ry="7" fill="#c99b72" transform="rotate(-18 26 58)"/>
+<ellipse cx="94" cy="58" rx="11" ry="7" fill="#c99b72" transform="rotate(18 94 58)"/>
+<ellipse cx="60" cy="64" rx="26" ry="28" fill="url(#grOVE)"/>
+<circle cx="48" cy="60" r="4.8" fill="#3a2a1c"/><circle cx="72" cy="60" r="4.8" fill="#3a2a1c"/>
+<circle cx="49.6" cy="58.4" r="1.5" fill="#fff"/><circle cx="73.6" cy="58.4" r="1.5" fill="#fff"/>
+<path d="M54 78 q6 5 12 0" stroke="#7a5238" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+<ellipse cx="42" cy="72" rx="5" ry="3" fill="#e89a8a" opacity=".5"/><ellipse cx="78" cy="72" rx="5" ry="3" fill="#e89a8a" opacity=".5"/></svg>`,
+'galinha':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grGAL" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#fffdf6"/><stop offset="100%" stop-color="#efe2c8"/></radialGradient></defs>
+<circle cx="48" cy="16" r="8" fill="#e04040"/><circle cx="60" cy="10" r="9" fill="#e04040"/><circle cx="72" cy="16" r="8" fill="#e04040"/>
+<circle cx="60" cy="62" r="38" fill="url(#grGAL)"/>
+<circle cx="44" cy="56" r="5" fill="#3a2f26"/><circle cx="76" cy="56" r="5" fill="#3a2f26"/>
+<circle cx="45.6" cy="54.4" r="1.6" fill="#fff"/><circle cx="77.6" cy="54.4" r="1.6" fill="#fff"/>
+<polygon points="60,62 71,71 60,82 49,71" fill="#f5a01e"/>
+<path d="M49 71 h22" stroke="#c97a10" stroke-width="1.6"/>
+<ellipse cx="60" cy="90" rx="6" ry="6" fill="#e04040"/>
+<ellipse cx="37" cy="68" rx="5" ry="3" fill="#f2a6a0" opacity=".6"/><ellipse cx="83" cy="68" rx="5" ry="3" fill="#f2a6a0" opacity=".6"/></svg>`,
+'elefante':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grELE" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#aebdd0"/><stop offset="100%" stop-color="#8595ab"/></radialGradient></defs>
+<ellipse cx="21" cy="60" rx="19" ry="27" fill="#8595ab"/><ellipse cx="99" cy="60" rx="19" ry="27" fill="#8595ab"/>
+<ellipse cx="21" cy="60" rx="11" ry="18" fill="#c9d4e2"/><ellipse cx="99" cy="60" rx="11" ry="18" fill="#c9d4e2"/>
+<circle cx="60" cy="56" r="35" fill="url(#grELE)"/>
+<path d="M60 74 q-1 16 -12 24 q-5 4 -10 2" stroke="#93a3b8" stroke-width="13" fill="none" stroke-linecap="round"/>
+<circle cx="45" cy="52" r="5" fill="#2e3440"/><circle cx="75" cy="52" r="5" fill="#2e3440"/>
+<circle cx="46.6" cy="50.4" r="1.6" fill="#fff"/><circle cx="76.6" cy="50.4" r="1.6" fill="#fff"/>
+<ellipse cx="36" cy="64" rx="5" ry="3" fill="#e8a0a0" opacity=".5"/><ellipse cx="84" cy="64" rx="5" ry="3" fill="#e8a0a0" opacity=".5"/></svg>`,
+'macaco':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grMAC" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#b07a4e"/><stop offset="100%" stop-color="#8a5a34"/></radialGradient></defs>
+<circle cx="18" cy="56" r="15" fill="#8a5a34"/><circle cx="102" cy="56" r="15" fill="#8a5a34"/>
+<circle cx="18" cy="56" r="8" fill="#eecfa8"/><circle cx="102" cy="56" r="8" fill="#eecfa8"/>
+<circle cx="60" cy="58" r="36" fill="url(#grMAC)"/>
+<path d="M60 22 q4 -8 12 -6 q-6 8 -10 9" fill="#8a5a34"/>
+<ellipse cx="60" cy="52" rx="25" ry="15" fill="#eecfa8"/>
+<ellipse cx="60" cy="70" rx="20" ry="15" fill="#eecfa8"/>
+<circle cx="48" cy="52" r="4.8" fill="#33241a"/><circle cx="72" cy="52" r="4.8" fill="#33241a"/>
+<circle cx="49.6" cy="50.4" r="1.5" fill="#fff"/><circle cx="73.6" cy="50.4" r="1.5" fill="#fff"/>
+<circle cx="55" cy="66" r="1.8" fill="#6b4a2e"/><circle cx="65" cy="66" r="1.8" fill="#6b4a2e"/>
+<path d="M52 74 q8 7 16 0" stroke="#6b4a2e" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+<ellipse cx="40" cy="62" rx="4.5" ry="3" fill="#e89a8a" opacity=".45"/><ellipse cx="80" cy="62" rx="4.5" ry="3" fill="#e89a8a" opacity=".45"/></svg>`};
+const ART_EMOJI={'🐶':'cachorro','🐱':'gato','🐮':'vaca','🐷':'porco','🐸':'sapo','🦁':'leão','🐴':'cavalo','🦆':'pato','🐑':'ovelha','🐔':'galinha','🐘':'elefante','🐵':'macaco'};
+function imgHTML(e,cls=''){
+ const a=ART_EMOJI[e];
+ if(a)return `<span class="art ${cls}">${ART[a]}</span>`;
+ return `<span class="${cls}">${e}</span>`;
+}
 
 /* ===== conteúdo ===== */
 const ANIMALS=[
@@ -720,7 +890,6 @@ function renderTrilha(){
  const totalStars=Object.values(Prog.d.nodes).reduce((s,n)=>s+n.p,0)*5;
  $('#starTotal').textContent='⭐ '+totalStars;
  $('#childHello').textContent=Prog.d.name?`Oi, ${Prog.d.name}! 👋`:'Toque para aprender! 👇';
- /* próxima atividade recomendada */
  let hintId=null;
  for(let i=0;i<TRILHA.length;i++){
    if(i>=Prog.d.unlocked)break;
@@ -816,7 +985,7 @@ function showBurst(){
  const txt=pick(PRAISE);
  b.querySelector('.burst-text').textContent=txt;
  b.classList.add('show');
- if(G.playSound){const f=G.playSound;G.playSound=null;f();setTimeout(()=>VOICE.say(G.winSay||txt),1000);}
+ if(G.playSound){const f=G.playSound;G.playSound=null;f();setTimeout(()=>VOICE.say(G.winSay||txt),1400);}
  else VOICE.say(G.winSay||txt);
 }
 function hideBurst(){$('#burst').classList.remove('show');G.winSay='';G.playSound=null;}
@@ -864,7 +1033,7 @@ function qExplore(){
      else if(K==='letters')b.innerHTML=`<span class="d">${it.l}</span>`;
      else if(K==='shapes')b.innerHTML=`<svg viewBox="0 0 100 100" fill="${it.c}">${it.svg}</svg>`;
      else if(K==='colors')b.innerHTML=`<span class="blob" style="background:${it.h}"></span>`;
-     else b.innerHTML=`<span class="big">${it.e}</span>`;
+     else b.innerHTML=imgHTML(it.e);
    }
    b.addEventListener('click',()=>expTap(b,it,K,disp));
    grid.appendChild(b);});
@@ -888,7 +1057,7 @@ function expTap(b,it,K,disp){
    disp.innerHTML=s;
    VOICE.say(`Esse é o número ${it.w}!`);
  }else if(K==='letters'){
-   disp.innerHTML=`<span class="exp-big">${it.l}</span><span class="exp-e">${it.e}</span><span class="exp-word">${it.w}</span>`;
+   disp.innerHTML=`<span class="exp-big">${it.l}</span>`+imgHTML(it.e,'art-show')+`<span class="exp-word">${it.w}</span>`;
    VOICE.say(`Essa é a letra ${it.l}! ${it.l} de ${it.w}!`);
  }else if(K==='shapes'){
    disp.innerHTML=`<svg viewBox="0 0 100 100" fill="${it.c}">${it.svg}</svg><span class="exp-word">${cap(it.n)}</span>`;
@@ -901,9 +1070,9 @@ function expTap(b,it,K,disp){
    disp.innerHTML=`<span class="exp-big" style="color:${it.h}">🎵 ${it.n}</span>`;
    VOICE.say(it.n+'!');
  }else{
-   disp.innerHTML=`<span class="exp-e">${it.e}</span><span class="exp-word">${cap(it.n)}</span>`;
+   disp.innerHTML=imgHTML(it.e,'art-show')+`<span class="exp-word">${cap(it.n)}</span>`;
    VOICE.say(`Esse é ${it.a} ${it.n}!`);
-   setTimeout(()=>playAnimal(it.n),1100);
+   setTimeout(()=>playAnimal(it.n),1200);
  }
  if(isNew&&G.expFound.size>=G.expTarget){
    G.locked=true;
@@ -919,7 +1088,7 @@ function qAnimals(){
  const grid=mkGrid(stage);
  opts.forEach((an,i)=>{
    const b=mkOpt();b.style.animationDelay=(i*.08)+'s';
-   b.innerHTML=`<span class="big">${an.e}</span>`;
+   b.innerHTML=`<span class="big">${imgHTML(an.e)}</span>`;
    b.addEventListener('click',()=>answer(b,an===target,()=>{
      G.winSay=`Isso! É ${an.a} ${an.n}! Muito bem!`;
      G.playSound=()=>playAnimal(an.n);}));
@@ -980,13 +1149,13 @@ function qShadows(){
  setPrompt('Olhe a sombra! Quem é esse animal?');
  const wrap=document.createElement('div');wrap.className='v-wrap';
  const box=document.createElement('div');box.className='shadow-box';
- box.innerHTML=`<span class="shadow-e">${target.e}</span>`;
+ box.innerHTML=`<span class="shadow-e">${ART[target.n]||target.e}</span>`;
  wrap.appendChild(box);
  const grid=mkGrid(wrap,'compact');
  const shEl=box.querySelector('.shadow-e');
  opts.forEach((an,i)=>{
    const b=mkOpt();b.style.animationDelay=(i*.08)+'s';
-   b.innerHTML=`<span class="big">${an.e}</span>`;
+   b.innerHTML=`<span class="big">${imgHTML(an.e)}</span>`;
    b.addEventListener('click',()=>answer(b,an===target,()=>{
      G.winSay=`Isso! É ${an.a} ${an.n}! Muito bem!`;
      G.playSound=()=>playAnimal(an.n);
@@ -1006,7 +1175,7 @@ function qLetters(){
  const grid=mkGrid(wrap,nOpts===3?'compact cols3':'compact');
  opts.forEach((it,i)=>{
    const b=mkOpt();b.classList.add('col');b.style.animationDelay=(i*.08)+'s';
-   b.innerHTML=`<span class="big">${it.e}</span><span class="word">${it.w}</span>`;
+   b.innerHTML=`<span class="big">${imgHTML(it.e)}</span><span class="word">${it.w}</span>`;
    b.addEventListener('click',()=>answer(b,it===target,
      ()=>{G.winSay=`${target.l} de ${target.w}! Muito bem!`;}));
    grid.appendChild(b);});
@@ -1024,7 +1193,7 @@ function qVowels(){
  const grid=mkGrid(wrap,'compact');
  opts.forEach((it,i)=>{
    const b=mkOpt();b.classList.add('col');b.style.animationDelay=(i*.08)+'s';
-   b.innerHTML=`<span class="big">${it.e}</span><span class="word">${it.w}</span>`;
+   b.innerHTML=`<span class="big">${imgHTML(it.e)}</span><span class="word">${it.w}</span>`;
    b.addEventListener('click',()=>answer(b,it===target,
      ()=>{G.winSay=`${v.l} de ${it.w}! Muito bem!`;}));
    grid.appendChild(b);});
@@ -1044,7 +1213,7 @@ function qSylStart(){
  const grid=mkGrid(wrap,nOpts===3?'compact cols3':'compact');
  opts.forEach((it,i)=>{
    const b=mkOpt();b.classList.add('col');b.style.animationDelay=(i*.08)+'s';
-   b.innerHTML=`<span class="big">${it.e}</span><span class="word">${it.w}</span>`;
+   b.innerHTML=`<span class="big">${imgHTML(it.e)}</span><span class="word">${it.w}</span>`;
    b.addEventListener('click',()=>answer(b,it===target,
      ()=>{G.winSay=`${sy.s} de ${it.w}! Muito bem!`;}));
    grid.appendChild(b);});
@@ -1129,12 +1298,12 @@ function qRhymes(){
  const stage=resetStage();
  setPrompt(`O que rima com ${r.w}?`);
  const wrap=document.createElement('div');wrap.className='v-wrap';
- const card=document.createElement('div');card.className='big-img-card';card.textContent=r.e;
+ const card=document.createElement('div');card.className='big-img-card';card.innerHTML=imgHTML(r.e,'art-show');
  wrap.appendChild(card);
  const grid=mkGrid(wrap,'compact cols3');
  opts.forEach((it,i)=>{
    const b=mkOpt();b.classList.add('col');b.style.animationDelay=(i*.08)+'s';
-   b.innerHTML=`<span class="big">${it.e}</span><span class="word">${it.w}</span>`;
+   b.innerHTML=`<span class="big">${imgHTML(it.e)}</span><span class="word">${it.w}</span>`;
    b.addEventListener('click',()=>answer(b,it===r.r,
      ()=>{G.winSay=`${r.w} rima com ${r.r.w}! Muito bem!`;}));
    grid.appendChild(b);});
@@ -1201,7 +1370,6 @@ function celebrate(){
    setTimeout(()=>VOICE.say(`Parabéns${nm}! Você ganhou cinco estrelas!`),500);
  }
  show('win');
- /* diploma quando TODA a trilha estiver completa */
  const allDone=TRILHA.every((lv,i)=>Prog.levelDone(i));
  if(allDone&&!Prog.d.diploma){
    Prog.d.diploma=1;Prog.save();
