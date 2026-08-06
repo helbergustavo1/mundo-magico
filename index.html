@@ -275,7 +275,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
     <div class="home-sub"><span class="star-chip" id="starTotal">⭐ 0</span><span id="childHello"></span></div>
     <div id="trilha" class="trilha"></div>
   </div>
-  <button class="parent-dot" id="parentDot" aria-label="Área dos pais">👨‍👩‍👧</button>
+  <button class="parent-dot" id="parentDot" aria-label="Área dos pais">👨‍👩‍</button>
 </section>
 
 <section id="game" class="screen hidden">
@@ -346,7 +346,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 <div id="pPanel" class="overlay hidden">
   <div class="p-card">
     <div class="p-head">
-      <div class="p-title">👨‍👩‍👧 Área dos Pais</div>
+      <div class="p-title">👨‍‍👧 Área dos Pais</div>
       <button class="p-x" id="pClose">✖</button>
     </div>
 
@@ -827,7 +827,7 @@ const NUMW={m:['','um','dois','três','quatro','cinco','seis','sete','oito','nov
  f:['','uma','duas','três','quatro','cinco','seis','sete','oito','nove']};
 const PRAISE=['Muito bem!','Parabéns!','Você é demais!','Isso aí!','Que incrível!','Excelente!','Você conseguiu!'];
 const TRYAGAIN=['Tente de novo!','Quase! Vamos tentar outra vez!','Hmm, tenta outra vez!'];
-const BURST_E=['🎉','🌟','🥳','✨','🎊','🏅'];
+const BURST_E=['🎉','','🥳','✨','🎊','🏅'];
 
 /* ===== a trilha (5 níveis) ===== */
 const TRILHA=[
@@ -1077,9 +1077,10 @@ function expTap(b,it,K,disp,seq){
    disp.innerHTML=`<span class="exp-big" style="color:${it.h}">🎵 ${it.n}</span>`;
    VOICE.say(it.n+'!');
  }else{
+   /* ANIMAIS: som toca NA HORA, e a voz fala o nome em seguida */
    disp.innerHTML=imgHTML(it.e,'art-show')+`<span class="exp-word">${cap(it.n)}</span>`;
+   playAnimal(it.n);
    VOICE.say(`Esse é ${it.a} ${it.n}!`);
-   setTimeout(()=>playAnimal(it.n),1200);
  }
  if(isNew&&G.expFound.size>=G.expTarget){
    G.locked=true;
@@ -1361,7 +1362,7 @@ function celebrate(){
    Prog.d.unlocked++;Prog.save();newLevel=TRILHA[li+1];}
  SFX.good();setTimeout(()=>SFX.star(),400);confetti(110);
  clearInterval(G.confTimer);G.confTimer=setInterval(()=>confetti(16),1300);
- $('#winEmoji').textContent=pick(['🐰','🦁','🐶','🐸','🦄','🐼','🐵','🦉']);
+ $('#winEmoji').textContent=pick(['🐰','','🐶','','🦄','','🐵','']);
  const row=$('#winStars');row.innerHTML='';
  for(let i=0;i<5;i++){const s=document.createElement('span');s.textContent='⭐';
    s.style.animationDelay=(.25+i*.18)+'s';row.appendChild(s);}
@@ -1401,7 +1402,7 @@ $('#homeBtn').addEventListener('click',goHome);
 $('#muteBtn').addEventListener('click',()=>{
  SFX.ensure();SFX.muted=!SFX.muted;
  if(SFX.muted&&('speechSynthesis'in window))try{speechSynthesis.cancel();}catch(e){}
- $('#muteBtn').textContent=SFX.muted?'🔇':'🔊';
+ $('#muteBtn').textContent=SFX.muted?'🔇':'';
  try{localStorage.setItem('mm_mute',SFX.muted?'1':'0');}catch(e){}
  if(!SFX.muted)SFX.click();});
 
