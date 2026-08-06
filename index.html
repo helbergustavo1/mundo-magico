@@ -110,7 +110,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 .art svg{width:100%;height:100%;display:block}
 .opt .big .art{width:16vmin;height:16vmin}
 .exp-btn .art{width:76%;height:76%}
-.art-show{width:16vmin;height:16vmin}
+.art-show{width:16vmin;height:16vmin;font-size:13vmin;display:inline-flex;align-items:center;justify-content:center;line-height:1}
 .shadow-e svg{width:18vmin;height:18vmin;display:block}
 
 /* modo conhecer (bebê) */
@@ -132,6 +132,10 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 .exp-btn svg{width:58%;height:58%}
 .exp-btn.found{background:#fff8e1}
 .exp-btn.found::after{content:'⭐';position:absolute;top:-1.8vmin;right:-1.2vmin;font-size:4.5vmin;animation:starPop .5s cubic-bezier(.34,1.56,.64,1)}
+
+/* ajustes finais de ilustração (precisam vir por último) */
+.exp-btn .art svg{width:100%;height:100%}
+.art-show svg{width:100%;height:100%}
 
 /* xilofone */
 .xylo{display:flex;gap:2vmin;align-items:flex-end;justify-content:center;width:min(94vmin,820px);padding-bottom:2vmin}
@@ -882,7 +886,7 @@ Prog.load();
 /* ===== estado ===== */
 const screens={home:$('#home'),game:$('#game'),win:$('#win')};
 const show=n=>{for(const k in screens)screens[k].classList.toggle('hidden',k!==n);};
-const G={base:null,nodeId:null,kind:null,round:0,total:5,locked:false,firstTry:true,sa:0,sf:0,tier:0,prompt:'',winSay:'',playSound:null,bMiss:0,bi:0,bub:null,expFound:null,expTarget:0,confTimer:null,sessionStart:null};
+const G={base:null,nodeId:null,kind:null,round:0,total:5,locked:false,firstTry:true,sa:0,sf:0,tier:0,prompt:'',winSay:'',playSound:null,bMiss:0,bi:0,bub:null,expFound:null,expTarget:0,confTimer:null,sessionStart:null,seq:0};
 
 /* ===== trilha na tela ===== */
 function renderTrilha(){
@@ -934,6 +938,7 @@ $('#startBtn').addEventListener('click',()=>{
 /* ===== fluxo do jogo ===== */
 function startGame(nodeId){
  const nd=nodeById(nodeId);if(!nd)return;
+ G.seq++;
  G.nodeId=nodeId;G.base=nd.b;G.kind=nd.kind||null;
  G.round=0;G.locked=false;G.firstTry=true;
  G.sa=0;G.sf=0;G.winSay='';G.playSound=null;
@@ -972,7 +977,8 @@ function answer(btn,isRight,setWin){
    if(setWin)setWin();
    G.sa++;if(G.firstTry)G.sf++;
    SFX.good();earnStar();confetti(45);showBurst();
-   setTimeout(()=>{hideBurst();G.round++;nextRound();},2400);
+   const seq=G.seq;
+   setTimeout(()=>{if(seq!==G.seq)return;hideBurst();G.round++;nextRound();},2400);
  }else{
    G.firstTry=false;
    btn.classList.add('wrong','disabled');
@@ -998,6 +1004,7 @@ function resetStage(){const s=$('#stage');s.className='';s.innerHTML='';return s
 /* --- modo conhecer: tocar e ouvir --- */
 function qExplore(){
  const K=G.kind;
+ const seq=G.seq;
  const stage=resetStage();
  const wrap=document.createElement('div');wrap.className='v-wrap';
  const disp=document.createElement('div');disp.className='exp-show';
@@ -1035,11 +1042,11 @@ function qExplore(){
      else if(K==='colors')b.innerHTML=`<span class="blob" style="background:${it.h}"></span>`;
      else b.innerHTML=imgHTML(it.e);
    }
-   b.addEventListener('click',()=>expTap(b,it,K,disp));
+   b.addEventListener('click',()=>expTap(b,it,K,disp,seq));
    grid.appendChild(b);});
  wrap.appendChild(grid);stage.appendChild(wrap);
 }
-function expTap(b,it,K,disp){
+function expTap(b,it,K,disp,seq){
  if(G.locked)return;
  SFX.ensure();SFX.pop();
  b.style.animation='none';void b.offsetWidth;b.style.animation='winJump .6s ease';
@@ -1076,7 +1083,7 @@ function expTap(b,it,K,disp){
  }
  if(isNew&&G.expFound.size>=G.expTarget){
    G.locked=true;
-   setTimeout(celebrate,1400);
+   setTimeout(()=>{if(seq===G.seq)celebrate();},1400);
  }
 }
 
@@ -1257,6 +1264,7 @@ function qBuild(){
  const pool=BUILD_WORDS.filter(w=>G.tier===0?w.t===0:(G.tier===1?w.t<=1:true));
  const word=pick(pool);
  G.bi=0;G.bMiss=0;
+ const seq=G.seq;
  const stage=resetStage();
  setPrompt('Forme a palavra! Toque nas sílabas na ordem!');
  const wrap=document.createElement('div');wrap.className='v-wrap';
@@ -1281,8 +1289,8 @@ function qBuild(){
          G.locked=true;
          G.sa++;if(G.bMiss===0)G.sf++;
          G.winSay=`${word.w}! Muito bem! Você formou a palavra!`;
-         setTimeout(()=>{SFX.good();earnStar();confetti(45);showBurst();
-           setTimeout(()=>{hideBurst();G.round++;nextRound();},2400);},500);
+         setTimeout(()=>{if(seq!==G.seq)return;SFX.good();earnStar();confetti(45);showBurst();
+           setTimeout(()=>{if(seq!==G.seq)return;hideBurst();G.round++;nextRound();},2400);},500);
        }
      }else{
        G.bMiss++;t.classList.add('wrong');
@@ -1311,6 +1319,7 @@ function qRhymes(){
 }
 function startBubbles(){
  G.locked=false;G.bub={popped:0,total:10};
+ const seq=G.seq;
  const stage=$('#stage');stage.className='bubble-stage';stage.innerHTML='';
  setPrompt('Estoure as bolhas! 👆');
  const cols=['#ff8fab','#7ec8ff','#ffd93d','#8fe3a1','#b79cff','#ffb26b'];
@@ -1324,10 +1333,10 @@ function startBubbles(){
    b.style.setProperty('--bc',pick(cols));
    b.style.animationDuration=rand(1.8,2.8)+'s';
    w.appendChild(b);
-   w.addEventListener('pointerdown',()=>popBubble(w));
+   w.addEventListener('pointerdown',()=>popBubble(w,seq));
    stage.appendChild(w);}
 }
-function popBubble(w){
+function popBubble(w,seq){
  if(w.dataset.done||G.locked)return;w.dataset.done='1';
  SFX.bubble();G.sa++;G.sf++;
  w.querySelector('.bubble').classList.add('boom');
@@ -1336,11 +1345,12 @@ function popBubble(w){
  G.bub.popped++;
  const chip=$('#chip');if(chip)chip.textContent=`🫧 ${G.bub.popped}/${G.bub.total}`;
  setTimeout(()=>w.remove(),420);
- if(G.bub.popped>=G.bub.total){G.locked=true;setTimeout(celebrate,650);}
+ if(G.bub.popped>=G.bub.total){G.locked=true;setTimeout(()=>{if(seq===G.seq)celebrate();},650);}
 }
 
 /* ===== vitória + progressão + diploma ===== */
 function celebrate(){
+ const seq=G.seq;
  const acc=G.sa>0?G.sf/G.sa:1;
  const nd=nodeById(G.nodeId)||{};
  const t0=nd.t0||0,t1=nd.t1!=null?nd.t1:t0;
@@ -1374,6 +1384,7 @@ function celebrate(){
  if(allDone&&!Prog.d.diploma){
    Prog.d.diploma=1;Prog.save();
    setTimeout(()=>{
+     if(seq!==G.seq)return;
      $('#dipName').textContent=Prog.d.name||'campeão';
      $('#dipDate').textContent='🗓️ '+new Date().toLocaleDateString('pt-BR');
      $('#diploma').classList.remove('hidden');
@@ -1383,7 +1394,7 @@ function celebrate(){
  }
 }
 $('#dipOk').addEventListener('click',()=>{SFX.pop();$('#diploma').classList.add('hidden');});
-function goHome(){try{speechSynthesis.cancel();}catch(e){}clearInterval(G.confTimer);SFX.click();show('home');renderTrilha();}
+function goHome(){G.seq++;try{speechSynthesis.cancel();}catch(e){}clearInterval(G.confTimer);SFX.click();show('home');renderTrilha();}
 $('#againBtn').addEventListener('click',()=>{clearInterval(G.confTimer);SFX.ensure();SFX.pop();startGame(G.nodeId);});
 $('#homeBtn2').addEventListener('click',goHome);
 $('#homeBtn').addEventListener('click',goHome);
