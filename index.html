@@ -90,7 +90,8 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 
 /* palco / opções */
 #stage{flex:1;width:100%;min-height:0;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.v-wrap{display:flex;flex-direction:column;align-items:center;gap:3.5vmin;width:100%}
+#stage.scroll-stage{overflow-y:auto;align-items:flex-start;-webkit-overflow-scrolling:touch}
+.v-wrap{display:flex;flex-direction:column;align-items:center;gap:3.5vmin;width:100%;padding:2vmin 0 6vmin}
 .opts{display:grid;grid-template-columns:repeat(2,1fr);gap:3.5vmin;width:min(92vmin,760px)}
 .opts.cols3{grid-template-columns:repeat(3,1fr)}
 .opts.compact{width:min(80vmin,600px);gap:3vmin}
@@ -105,7 +106,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 .wrong{animation:shake .5s ease!important}
 .disabled{opacity:.35;filter:grayscale(.8);pointer-events:none!important}
 
-/* ilustrações estilo adesivo kawaii */
+/* ilustrações estilo 3D fofo */
 .art{display:inline-block;line-height:0}
 .art svg{width:100%;height:100%;display:block}
 .opt .big .art{width:18vmin;height:18vmin}
@@ -275,7 +276,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
     <div class="home-sub"><span class="star-chip" id="starTotal">⭐ 0</span><span id="childHello"></span></div>
     <div id="trilha" class="trilha"></div>
   </div>
-  <button class="parent-dot" id="parentDot" aria-label="Área dos pais">👨‍‍</button>
+  <button class="parent-dot" id="parentDot" aria-label="Área dos pais">👨‍👩‍</button>
 </section>
 
 <section id="game" class="screen hidden">
@@ -335,7 +336,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 
 <div id="pGate" class="overlay hidden">
   <div class="p-card center">
-    <div class="p-title">👨‍👩‍ Área dos Pais</div>
+    <div class="p-title">👨‍‍ Área dos Pais</div>
     <p class="p-note">Para entrar, responda:</p>
     <div class="p-q" id="pQ"></div>
     <div class="p-opts" id="pOpts"></div>
@@ -394,10 +395,9 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 
     <div class="p-sec">💡 Dicas</div>
     <ul class="tips">
-      <li>👉 O cartão destacado com "👉 Comece aqui" é a próxima atividade recomendada.</li>
+      <li>👉 No Nível 1, a atividade só completa quando a criança toca em TODOS os elementos.</li>
       <li>🎓 Completando toda a trilha, a criança ganha um Diploma Mágico — tire um print!</li>
       <li>⏰ Defina o tempo de uso para criar uma rotina saudável de brincadeira.</li>
-      <li>O Nível 1 (Conhecer) é só apresentação: a criança toca e o app fala o nome.</li>
       <li>Cada nível abre quando a criança completa as atividades do nível anterior.</li>
       <li>10 a 15 minutos por dia é o ideal para essa idade.</li>
     </ul>
@@ -570,196 +570,210 @@ const RealSFX={cache:{},ok:{},
 const playAnimal=n=>{SFX.ensure();RealSFX.play(n);};
 
 /* =========================================================
-   ILUSTRAÇÕES — estilo ADESIVO KAWAII (fiel à referência):
-   olhos grandes com brilho duplo, bochechas rosadas,
-   sorriso aberto com linguinha, corpo chibi sentado
+   ILUSTRAÇÕES — estilo 3D FOFO (peludinhos, referência)
    ========================================================= */
 const ART={
-'cachorro':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gA" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#f6cd8d"/><stop offset="100%" stop-color="#dd9c50"/></radialGradient></defs>
-<ellipse cx="40" cy="60" rx="15" ry="26" fill="#b97f42" transform="rotate(22 40 60)"/>
-<ellipse cx="120" cy="60" rx="15" ry="26" fill="#b97f42" transform="rotate(-22 120 60)"/>
-<path d="M114 130 q16 -2 18 -16" stroke="#b97f42" stroke-width="9" fill="none" stroke-linecap="round"/>
-<ellipse cx="80" cy="124" rx="34" ry="27" fill="url(#gA)"/>
-<ellipse cx="80" cy="131" rx="20" ry="16" fill="#f9e6c4"/>
-<ellipse cx="60" cy="147" rx="11" ry="7" fill="#f6cd8d"/><ellipse cx="100" cy="147" rx="11" ry="7" fill="#f6cd8d"/>
-<circle cx="80" cy="62" r="41" fill="url(#gA)"/>
-<path d="M72 24 q5 -7 12 -5 q-4 7 -8 8z" fill="#dd9c50"/>
-<ellipse cx="80" cy="79" rx="18" ry="14" fill="#f9e6c4"/>
-<ellipse cx="80" cy="71" rx="6.5" ry="5" fill="#4a3325"/>
-<path d="M71 80 a9 7.5 0 0 0 18 0 z" fill="#5b4232"/>
-<ellipse cx="80" cy="84" rx="4.5" ry="2.8" fill="#ef9a9a"/>
-<circle cx="62" cy="56" r="8.5" fill="#fff"/><circle cx="62" cy="56" r="7" fill="#7a4a26"/><circle cx="62" cy="56" r="4.2" fill="#201409"/><circle cx="59.6" cy="54" r="2.4" fill="#fff"/><circle cx="64.2" cy="58.4" r="1.1" fill="#fff" opacity=".85"/>
-<circle cx="98" cy="56" r="8.5" fill="#fff"/><circle cx="98" cy="56" r="7" fill="#7a4a26"/><circle cx="98" cy="56" r="4.2" fill="#201409"/><circle cx="95.6" cy="54" r="2.4" fill="#fff"/><circle cx="100.2" cy="58.4" r="1.1" fill="#fff" opacity=".85"/>
-<path d="M54 42 q7 -4 13 -1 M93 41 q7 -3 13 1" stroke="#c98a4a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-<ellipse cx="50" cy="72" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/><ellipse cx="110" cy="72" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/></svg>`,
-'gato':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gB" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#f8b871"/><stop offset="100%" stop-color="#e88b3a"/></radialGradient></defs>
-<polygon points="44,34 34,4 66,22" fill="#e88b3a"/><polygon points="46,28 41,12 58,21" fill="#f9cfa4"/>
-<polygon points="116,34 126,4 94,22" fill="#e88b3a"/><polygon points="114,28 119,12 102,21" fill="#f9cfa4"/>
-<path d="M116 128 q14 6 22 -2 q-2 14 -20 12z" fill="#e88b3a"/>
-<ellipse cx="80" cy="124" rx="33" ry="27" fill="url(#gB)"/>
-<ellipse cx="80" cy="131" rx="19" ry="16" fill="#f9e0c0"/>
-<ellipse cx="61" cy="147" rx="10" ry="7" fill="#f8b871"/><ellipse cx="99" cy="147" rx="10" ry="7" fill="#f8b871"/>
-<circle cx="80" cy="62" r="40" fill="url(#gB)"/>
-<path d="M68 26 q3 8 0 12 M80 24 q2 9 0 13 M92 26 q-3 8 0 12" stroke="#c96a22" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-<ellipse cx="80" cy="78" rx="16" ry="12" fill="#f9e0c0"/>
-<polygon points="76,71 84,71 80,76" fill="#e2708a"/>
-<path d="M72 80 a8 7 0 0 0 16 0 z" fill="#7a4020"/>
-<ellipse cx="80" cy="84" rx="4" ry="2.6" fill="#ef9a9a"/>
-<circle cx="62" cy="56" r="8.5" fill="#fff"/><circle cx="62" cy="56" r="7" fill="#3f7a2e"/><circle cx="62" cy="56" r="4.2" fill="#201409"/><circle cx="59.6" cy="54" r="2.4" fill="#fff"/><circle cx="64.2" cy="58.4" r="1.1" fill="#fff" opacity=".85"/>
-<circle cx="98" cy="56" r="8.5" fill="#fff"/><circle cx="98" cy="56" r="7" fill="#3f7a2e"/><circle cx="98" cy="56" r="4.2" fill="#201409"/><circle cx="95.6" cy="54" r="2.4" fill="#fff"/><circle cx="100.2" cy="58.4" r="1.1" fill="#fff" opacity=".85"/>
-<path d="M40 66 l-16 -3 M40 73 l-16 3 M120 66 l16 -3 M120 73 l16 3" stroke="#c96a22" stroke-width="2" stroke-linecap="round"/>
-<ellipse cx="50" cy="72" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/><ellipse cx="110" cy="72" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/></svg>`,
-'vaca':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gC" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#fffdf7"/><stop offset="100%" stop-color="#eee3d0"/></radialGradient></defs>
-<path d="M46 26 q-8 -8 0 -14 q8 3 7 11z" fill="#e8d8b0"/><path d="M114 26 q8 -8 0 -14 q-8 3 -7 11z" fill="#e8d8b0"/>
-<ellipse cx="38" cy="52" rx="13" ry="8" fill="#eee3d0" transform="rotate(-18 38 52)"/><ellipse cx="122" cy="52" rx="13" ry="8" fill="#eee3d0" transform="rotate(18 122 52)"/>
-<ellipse cx="38" cy="52" rx="7" ry="4" fill="#f2c4cf" transform="rotate(-18 38 52)"/><ellipse cx="122" cy="52" rx="7" ry="4" fill="#f2c4cf" transform="rotate(18 122 52)"/>
-<ellipse cx="80" cy="124" rx="34" ry="27" fill="url(#gC)"/>
-<ellipse cx="98" cy="116" rx="12" ry="9" fill="#57493e" transform="rotate(-12 98 116)"/>
-<ellipse cx="62" cy="132" rx="9" ry="7" fill="#57493e"/>
-<ellipse cx="60" cy="147" rx="11" ry="7" fill="#fffdf7"/><ellipse cx="100" cy="147" rx="11" ry="7" fill="#fffdf7"/>
-<circle cx="80" cy="62" r="40" fill="url(#gC)"/>
-<ellipse cx="58" cy="40" rx="13" ry="10" fill="#57493e" transform="rotate(-15 58 40)"/>
-<ellipse cx="80" cy="80" rx="19" ry="13" fill="#f2b3c2"/>
-<ellipse cx="72" cy="77" rx="3" ry="4.5" fill="#c9708a"/><ellipse cx="88" cy="77" rx="3" ry="4.5" fill="#c9708a"/>
-<path d="M71 86 a9 6.5 0 0 0 18 0 z" fill="#b25c74"/>
-<ellipse cx="80" cy="89" rx="4.5" ry="2.6" fill="#ef9a9a"/>
-<circle cx="62" cy="58" r="8.5" fill="#fff"/><circle cx="62" cy="58" r="7" fill="#5a4a3a"/><circle cx="62" cy="58" r="4.2" fill="#201409"/><circle cx="59.6" cy="56" r="2.4" fill="#fff"/><circle cx="64.2" cy="60.4" r="1.1" fill="#fff" opacity=".85"/>
-<circle cx="98" cy="58" r="8.5" fill="#fff"/><circle cx="98" cy="58" r="7" fill="#5a4a3a"/><circle cx="98" cy="58" r="4.2" fill="#201409"/><circle cx="95.6" cy="56" r="2.4" fill="#fff"/><circle cx="100.2" cy="60.4" r="1.1" fill="#fff" opacity=".85"/>
-<ellipse cx="48" cy="72" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/><ellipse cx="112" cy="72" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/></svg>`,
-'porco':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gD" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#fbc7d4"/><stop offset="100%" stop-color="#ef97ac"/></radialGradient></defs>
-<polygon points="46,32 36,8 64,20" fill="#ef97ac"/><polygon points="47,27 42,14 57,20" fill="#d4708c"/>
-<polygon points="114,32 124,8 96,20" fill="#ef97ac"/><polygon points="113,27 118,14 103,20" fill="#d4708c"/>
-<path d="M114 128 q12 0 12 -10 q0 -6 -6 -6 q-4 0 -4 5" stroke="#e06a86" stroke-width="4" fill="none" stroke-linecap="round"/>
-<ellipse cx="80" cy="124" rx="34" ry="27" fill="url(#gD)"/>
-<ellipse cx="80" cy="131" rx="20" ry="16" fill="#fbdce4"/>
-<ellipse cx="60" cy="147" rx="11" ry="7" fill="#fbc7d4"/><ellipse cx="100" cy="147" rx="11" ry="7" fill="#fbc7d4"/>
-<circle cx="80" cy="62" r="40" fill="url(#gD)"/>
-<ellipse cx="80" cy="76" rx="15" ry="11" fill="#e5839d"/>
-<ellipse cx="74" cy="76" rx="2.6" ry="4" fill="#a34d61"/><ellipse cx="86" cy="76" rx="2.6" ry="4" fill="#a34d61"/>
-<path d="M72 90 a8 6 0 0 0 16 0 z" fill="#a34d61"/>
-<ellipse cx="80" cy="93" rx="4" ry="2.4" fill="#ef9a9a"/>
-<circle cx="60" cy="54" r="8.5" fill="#fff"/><circle cx="60" cy="54" r="7" fill="#5a3242"/><circle cx="60" cy="54" r="4.2" fill="#201409"/><circle cx="57.6" cy="52" r="2.4" fill="#fff"/><circle cx="62.2" cy="56.4" r="1.1" fill="#fff" opacity=".85"/>
-<circle cx="100" cy="54" r="8.5" fill="#fff"/><circle cx="100" cy="54" r="7" fill="#5a3242"/><circle cx="100" cy="54" r="4.2" fill="#201409"/><circle cx="97.6" cy="52" r="2.4" fill="#fff"/><circle cx="102.2" cy="56.4" r="1.1" fill="#fff" opacity=".85"/>
-<ellipse cx="46" cy="70" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/><ellipse cx="114" cy="70" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/></svg>`,
-'sapo':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gE" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#a8dd7a"/><stop offset="100%" stop-color="#6cb045"/></radialGradient></defs>
-<circle cx="52" cy="34" r="17" fill="#7cc24f"/><circle cx="108" cy="34" r="17" fill="#7cc24f"/>
-<ellipse cx="56" cy="148" rx="12" ry="6" fill="#7cc24f"/><ellipse cx="104" cy="148" rx="12" ry="6" fill="#7cc24f"/>
-<ellipse cx="80" cy="118" rx="38" ry="32" fill="url(#gE)"/>
-<ellipse cx="80" cy="130" rx="24" ry="16" fill="#e4f4c8"/>
-<circle cx="52" cy="34" r="13" fill="#fff"/><circle cx="108" cy="34" r="13" fill="#fff"/>
-<circle cx="52" cy="35" r="9" fill="#7aa03a"/><circle cx="108" cy="35" r="9" fill="#7aa03a"/>
-<circle cx="52" cy="36" r="5.5" fill="#201409"/><circle cx="108" cy="36" r="5.5" fill="#201409"/>
-<circle cx="49" cy="32" r="3" fill="#fff"/><circle cx="105" cy="32" r="3" fill="#fff"/>
-<circle cx="74" cy="62" r="2" fill="#3f6226"/><circle cx="86" cy="62" r="2" fill="#3f6226"/>
-<path d="M62 70 q18 14 36 0 q-18 8 -36 0z" fill="#3f6226"/>
-<ellipse cx="80" cy="77" rx="6" ry="3" fill="#ef9a9a"/>
-<ellipse cx="46" cy="66" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/><ellipse cx="114" cy="66" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/></svg>`,
-'leão':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gF" cx="50%" cy="38%" r="80%"><stop offset="0%" stop-color="#f6c479"/><stop offset="100%" stop-color="#e2a24c"/></radialGradient></defs>
-<path d="M114 128 q12 -2 14 -12" stroke="#e2a24c" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="129" cy="114" r="6" fill="#8a5742"/>
-<ellipse cx="80" cy="132" rx="30" ry="22" fill="url(#gF)"/>
-<ellipse cx="64" cy="150" rx="10" ry="6" fill="#f6c479"/><ellipse cx="96" cy="150" rx="10" ry="6" fill="#f6c479"/>
-<g fill="#8a5742">
-<circle cx="80" cy="18" r="14"/><circle cx="108" cy="26" r="14"/><circle cx="126" cy="48" r="14"/><circle cx="130" cy="76" r="14"/>
-<circle cx="118" cy="100" r="14"/><circle cx="96" cy="112" r="14"/><circle cx="64" cy="112" r="14"/><circle cx="42" cy="100" r="14"/>
-<circle cx="30" cy="76" r="14"/><circle cx="34" cy="48" r="14"/><circle cx="52" cy="26" r="14"/><circle cx="80" cy="66" r="46"/></g>
-<circle cx="80" cy="66" r="34" fill="url(#gF)"/>
-<ellipse cx="80" cy="80" rx="17" ry="13" fill="#f9e6c4"/>
-<polygon points="75,74 85,74 80,80" fill="#6b4226"/>
-<path d="M71 82 a9 7 0 0 0 18 0 z" fill="#5b3a2a"/>
-<ellipse cx="80" cy="86" rx="4.5" ry="2.8" fill="#ef9a9a"/>
-<circle cx="64" cy="60" r="8.5" fill="#fff"/><circle cx="64" cy="60" r="7" fill="#7a4a26"/><circle cx="64" cy="60" r="4.2" fill="#201409"/><circle cx="61.6" cy="58" r="2.4" fill="#fff"/><circle cx="66.2" cy="62.4" r="1.1" fill="#fff" opacity=".85"/>
-<circle cx="96" cy="60" r="8.5" fill="#fff"/><circle cx="96" cy="60" r="7" fill="#7a4a26"/><circle cx="96" cy="60" r="4.2" fill="#201409"/><circle cx="93.6" cy="58" r="2.4" fill="#fff"/><circle cx="98.2" cy="62.4" r="1.1" fill="#fff" opacity=".85"/>
-<ellipse cx="54" cy="74" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/><ellipse cx="106" cy="74" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/></svg>`,
-'cavalo':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gG" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#c9955e"/><stop offset="100%" stop-color="#9a6537"/></radialGradient></defs>
-<polygon points="52,26 46,2 68,16" fill="#9a6537"/><polygon points="53,21 50,8 62,15" fill="#6b4226"/>
-<polygon points="108,26 114,2 92,16" fill="#9a6537"/><polygon points="107,21 110,8 98,15" fill="#6b4226"/>
-<path d="M112 124 q12 6 10 20" stroke="#6b4226" stroke-width="8" fill="none" stroke-linecap="round"/>
-<ellipse cx="80" cy="126" rx="33" ry="26" fill="url(#gG)"/>
-<ellipse cx="80" cy="133" rx="19" ry="15" fill="#e8cda8"/>
-<ellipse cx="61" cy="148" rx="10" ry="7" fill="#c9955e"/><ellipse cx="99" cy="148" rx="10" ry="7" fill="#c9955e"/>
-<circle cx="80" cy="62" r="40" fill="url(#gG)"/>
-<path d="M64 24 q16 -8 32 0 q-6 10 -16 9 q-10 1 -16 -9z" fill="#6b4226"/>
-<path d="M44 40 q-8 16 -4 32" stroke="#6b4226" stroke-width="7" fill="none" stroke-linecap="round"/>
-<ellipse cx="80" cy="80" rx="18" ry="13" fill="#e8cda8"/>
-<ellipse cx="72" cy="77" rx="2.6" ry="3.6" fill="#7a5232"/><ellipse cx="88" cy="77" rx="2.6" ry="3.6" fill="#7a5232"/>
-<path d="M72 86 a8 6 0 0 0 16 0 z" fill="#7a5232"/>
+'cachorro':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gA" cx="50%" cy="32%" r="80%"><stop offset="0%" stop-color="#f7e3c8"/><stop offset="100%" stop-color="#dcb283"/></radialGradient></defs>
+<path d="M118 118 q16 -4 18 -18 q6 16 -8 26z" fill="#dcb283"/>
+<g fill="url(#gA)"><circle cx="80" cy="120" r="30"/><circle cx="56" cy="126" r="14"/><circle cx="104" cy="126" r="14"/><circle cx="80" cy="104" r="26"/></g>
+<ellipse cx="80" cy="128" rx="16" ry="12" fill="#fbf0dd"/>
+<ellipse cx="66" cy="146" rx="10" ry="6" fill="#f7e3c8"/><ellipse cx="94" cy="146" rx="10" ry="6" fill="#f7e3c8"/>
+<g fill="url(#gA)"><circle cx="80" cy="58" r="38"/><circle cx="52" cy="40" r="12"/><circle cx="66" cy="30" r="12"/><circle cx="84" cy="28" r="12"/><circle cx="100" cy="34" r="12"/><circle cx="110" cy="48" r="11"/><circle cx="50" cy="56" r="11"/><circle cx="110" cy="64" r="10"/><circle cx="50" cy="70" r="10"/></g>
+<ellipse cx="44" cy="46" rx="12" ry="20" fill="#c99a66" transform="rotate(24 44 46)"/>
+<ellipse cx="116" cy="46" rx="12" ry="20" fill="#c99a66" transform="rotate(-24 116 46)"/>
+<ellipse cx="80" cy="74" rx="17" ry="13" fill="#fbf0dd"/>
+<ellipse cx="80" cy="67" rx="6" ry="4.6" fill="#4a3325"/>
+<path d="M72 76 a8 7 0 0 0 16 0 z" fill="#5b4232"/>
+<ellipse cx="80" cy="80" rx="4" ry="2.4" fill="#ef9a9a"/>
+<circle cx="62" cy="52" r="9" fill="#fff"/><circle cx="62" cy="53" r="7.5" fill="#6b4a2e"/><circle cx="62" cy="53.5" r="4.6" fill="#1d1410"/><circle cx="59.4" cy="50.5" r="2.6" fill="#fff"/><circle cx="64.2" cy="56" r="1.2" fill="#fff" opacity=".9"/>
+<circle cx="98" cy="52" r="9" fill="#fff"/><circle cx="98" cy="53" r="7.5" fill="#6b4a2e"/><circle cx="98" cy="53.5" r="4.6" fill="#1d1410"/><circle cx="95.4" cy="50.5" r="2.6" fill="#fff"/><circle cx="100.2" cy="56" r="1.2" fill="#fff" opacity=".9"/>
+<path d="M70 24 q4 -8 10 -8 q-2 7 -6 9z" fill="#dcb283"/>
+<ellipse cx="52" cy="66" rx="6" ry="3.6" fill="#f5a3b0" opacity=".55"/><ellipse cx="108" cy="66" rx="6" ry="3.6" fill="#f5a3b0" opacity=".55"/></svg>`,
+'gato':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gB" cx="50%" cy="32%" r="80%"><stop offset="0%" stop-color="#f8bd7d"/><stop offset="100%" stop-color="#e08a3c"/></radialGradient></defs>
+<path d="M116 122 q18 4 24 -8 q0 16 -18 18z" fill="#e08a3c"/>
+<path d="M132 112 q6 -2 8 -6" stroke="#b96a24" stroke-width="5" fill="none" stroke-linecap="round"/>
+<g fill="url(#gB)"><circle cx="80" cy="120" r="30"/><circle cx="56" cy="126" r="13"/><circle cx="104" cy="126" r="13"/></g>
+<ellipse cx="80" cy="128" rx="15" ry="11" fill="#fbe0c0"/>
+<ellipse cx="66" cy="146" rx="9" ry="6" fill="#f8bd7d"/><ellipse cx="94" cy="146" rx="9" ry="6" fill="#f8bd7d"/>
+<polygon points="48,34 40,6 68,22" fill="#e08a3c"/><polygon points="50,28 46,14 62,21" fill="#f9cfa4"/>
+<polygon points="112,34 120,6 92,22" fill="#e08a3c"/><polygon points="110,28 114,14 98,21" fill="#f9cfa4"/>
+<g fill="url(#gB)"><circle cx="80" cy="58" r="37"/><circle cx="54" cy="42" r="11"/><circle cx="68" cy="32" r="11"/><circle cx="86" cy="30" r="11"/><circle cx="102" cy="38" r="11"/><circle cx="110" cy="52" r="10"/><circle cx="50" cy="56" r="10"/><circle cx="108" cy="66" r="9"/><circle cx="52" cy="70" r="9"/></g>
+<path d="M66 26 q3 8 0 12 M78 24 q2 9 0 13 M90 26 q-3 8 0 12" stroke="#b96a24" stroke-width="4" fill="none" stroke-linecap="round"/>
+<ellipse cx="80" cy="74" rx="15" ry="11" fill="#fbe0c0"/>
+<polygon points="76,68 84,68 80,73" fill="#e2708a"/>
+<path d="M72 76 a8 6.5 0 0 0 16 0 z" fill="#7a4020"/>
+<ellipse cx="80" cy="80" rx="4" ry="2.4" fill="#ef9a9a"/>
+<circle cx="62" cy="52" r="9" fill="#fff"/><circle cx="62" cy="53" r="7.5" fill="#3f7a2e"/><circle cx="62" cy="53.5" r="4.6" fill="#1d1410"/><circle cx="59.4" cy="50.5" r="2.6" fill="#fff"/><circle cx="64.2" cy="56" r="1.2" fill="#fff" opacity=".9"/>
+<circle cx="98" cy="52" r="9" fill="#fff"/><circle cx="98" cy="53" r="7.5" fill="#3f7a2e"/><circle cx="98" cy="53.5" r="4.6" fill="#1d1410"/><circle cx="95.4" cy="50.5" r="2.6" fill="#fff"/><circle cx="100.2" cy="56" r="1.2" fill="#fff" opacity=".9"/>
+<path d="M40 66 l-16 -3 M40 73 l-16 3 M120 66 l16 -3 M120 73 l16 3" stroke="#b96a24" stroke-width="2" stroke-linecap="round"/>
+<ellipse cx="50" cy="72" rx="6" ry="3.6" fill="#f5a3b0" opacity=".55"/><ellipse cx="110" cy="72" rx="6" ry="3.6" fill="#f5a3b0" opacity=".55"/></svg>`,
+'vaca':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gC" cx="50%" cy="30%" r="85%"><stop offset="0%" stop-color="#c97a3a"/><stop offset="100%" stop-color="#9a5426"/></radialGradient></defs>
+<path d="M40 22 q-14 -6 -16 -16 q14 0 20 8z" fill="#f2e2c4"/>
+<path d="M120 22 q14 -6 16 -16 q-14 0 -20 8z" fill="#f2e2c4"/>
+<g fill="url(#gC)"><circle cx="80" cy="112" r="34"/><circle cx="52" cy="104" r="14"/><circle cx="108" cy="104" r="14"/><circle cx="56" cy="124" r="13"/><circle cx="104" cy="124" r="13"/><circle cx="64" cy="90" r="14"/><circle cx="96" cy="90" r="14"/></g>
+<rect x="60" y="134" width="10" height="14" rx="5" fill="#9a5426"/><rect x="90" y="134" width="10" height="14" rx="5" fill="#9a5426"/>
+<rect x="61" y="142" width="8" height="6" rx="3" fill="#5b3a2a"/><rect x="91" y="142" width="8" height="6" rx="3" fill="#5b3a2a"/>
+<ellipse cx="42" cy="56" rx="10" ry="6" fill="#9a5426" transform="rotate(-16 42 56)"/>
+<ellipse cx="118" cy="56" rx="10" ry="6" fill="#9a5426" transform="rotate(16 118 56)"/>
+<g fill="url(#gC)"><circle cx="80" cy="56" r="36"/><circle cx="52" cy="44" r="12"/><circle cx="108" cy="44" r="12"/><circle cx="50" cy="62" r="11"/><circle cx="110" cy="62" r="11"/></g>
+<g fill="#b96a2e"><circle cx="62" cy="30" r="10"/><circle cx="74" cy="26" r="10"/><circle cx="88" cy="26" r="10"/><circle cx="98" cy="32" r="9"/><circle cx="68" cy="36" r="9"/><circle cx="92" cy="36" r="9"/></g>
+<ellipse cx="80" cy="76" rx="18" ry="13" fill="#d9a877"/>
+<ellipse cx="72" cy="73" rx="3" ry="4.2" fill="#6b4226"/><ellipse cx="88" cy="73" rx="3" ry="4.2" fill="#6b4226"/>
+<path d="M72 82 a8 6 0 0 0 16 0 z" fill="#6b4226"/>
+<ellipse cx="80" cy="85" rx="4" ry="2.4" fill="#ef9a9a"/>
+<circle cx="63" cy="52" r="9" fill="#fff"/><circle cx="63" cy="53" r="7.5" fill="#5a3a1e"/><circle cx="63" cy="53.5" r="4.6" fill="#1d1410"/><circle cx="60.4" cy="50.5" r="2.6" fill="#fff"/><circle cx="65.2" cy="56" r="1.2" fill="#fff" opacity=".9"/>
+<circle cx="97" cy="52" r="9" fill="#fff"/><circle cx="97" cy="53" r="7.5" fill="#5a3a1e"/><circle cx="97" cy="53.5" r="4.6" fill="#1d1410"/><circle cx="94.4" cy="50.5" r="2.6" fill="#fff"/><circle cx="99.2" cy="56" r="1.2" fill="#fff" opacity=".9"/>
+<ellipse cx="50" cy="68" rx="6" ry="3.6" fill="#f5a3b0" opacity=".5"/><ellipse cx="110" cy="68" rx="6" ry="3.6" fill="#f5a3b0" opacity=".5"/></svg>`,
+'porco':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gD" cx="50%" cy="32%" r="80%"><stop offset="0%" stop-color="#fbc7d4"/><stop offset="100%" stop-color="#ee94ab"/></radialGradient></defs>
+<path d="M116 116 q12 0 12 -10 q0 -6 -6 -6 q-4 0 -4 5" stroke="#e06a86" stroke-width="4" fill="none" stroke-linecap="round"/>
+<g fill="url(#gD)"><circle cx="80" cy="118" r="30"/><circle cx="56" cy="124" r="13"/><circle cx="104" cy="124" r="13"/></g>
+<ellipse cx="80" cy="126" rx="15" ry="11" fill="#fbdce4"/>
+<rect x="62" y="138" width="10" height="10" rx="4" fill="#ee94ab"/><rect x="88" y="138" width="10" height="10" rx="4" fill="#ee94ab"/>
+<rect x="63" y="144" width="8" height="5" rx="2.5" fill="#a34d61"/><rect x="89" y="144" width="8" height="5" rx="2.5" fill="#a34d61"/>
+<polygon points="50,30 42,8 66,18" fill="#ee94ab"/><polygon points="51,25 47,13 60,18" fill="#d4708c"/>
+<polygon points="110,30 118,8 94,18" fill="#ee94ab"/><polygon points="109,25 113,13 100,18" fill="#d4708c"/>
+<g fill="url(#gD)"><circle cx="80" cy="58" r="37"/><circle cx="54" cy="44" r="11"/><circle cx="106" cy="44" r="11"/><circle cx="50" cy="60" r="10"/><circle cx="110" cy="60" r="10"/><circle cx="54" cy="74" r="9"/><circle cx="106" cy="74" r="9"/></g>
+<ellipse cx="80" cy="72" rx="15" ry="11" fill="#e5839d"/>
+<ellipse cx="74" cy="72" rx="2.8" ry="4.2" fill="#a34d61"/><ellipse cx="86" cy="72" rx="2.8" ry="4.2" fill="#a34d61"/>
+<path d="M72 86 a8 6 0 0 0 16 0 z" fill="#a34d61"/>
 <ellipse cx="80" cy="89" rx="4" ry="2.4" fill="#ef9a9a"/>
-<circle cx="62" cy="56" r="8.5" fill="#fff"/><circle cx="62" cy="56" r="7" fill="#5a3a1e"/><circle cx="62" cy="56" r="4.2" fill="#201409"/><circle cx="59.6" cy="54" r="2.4" fill="#fff"/><circle cx="64.2" cy="58.4" r="1.1" fill="#fff" opacity=".85"/>
-<circle cx="98" cy="56" r="8.5" fill="#fff"/><circle cx="98" cy="56" r="7" fill="#5a3a1e"/><circle cx="98" cy="56" r="4.2" fill="#201409"/><circle cx="95.6" cy="54" r="2.4" fill="#fff"/><circle cx="100.2" cy="58.4" r="1.1" fill="#fff" opacity=".85"/>
-<ellipse cx="48" cy="70" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/><ellipse cx="112" cy="70" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/></svg>`,
-'pato':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gH" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#ffe98f"/><stop offset="100%" stop-color="#f7c243"/></radialGradient></defs>
-<path d="M78 20 q3 -7 10 -6 q-3 7 -7 8z" fill="#f7c243"/>
-<ellipse cx="52" cy="120" rx="10" ry="16" fill="#f7c243" transform="rotate(15 52 120)"/>
-<ellipse cx="128" cy="120" rx="10" ry="16" fill="#f7c243" transform="rotate(-15 128 120)"/>
-<ellipse cx="80" cy="124" rx="33" ry="27" fill="url(#gH)"/>
-<ellipse cx="80" cy="131" rx="19" ry="16" fill="#fff6d8"/>
-<ellipse cx="64" cy="149" rx="11" ry="6" fill="#f5941e"/><ellipse cx="96" cy="149" rx="11" ry="6" fill="#f5941e"/>
-<circle cx="80" cy="62" r="40" fill="url(#gH)"/>
-<ellipse cx="80" cy="75" rx="16" ry="8" fill="#f5941e"/>
-<ellipse cx="80" cy="82" rx="11" ry="5" fill="#e8830f"/>
-<circle cx="62" cy="54" r="8.5" fill="#fff"/><circle cx="62" cy="54" r="7" fill="#5a3a1e"/><circle cx="62" cy="54" r="4.2" fill="#201409"/><circle cx="59.6" cy="52" r="2.4" fill="#fff"/><circle cx="64.2" cy="56.4" r="1.1" fill="#fff" opacity=".85"/>
-<circle cx="98" cy="54" r="8.5" fill="#fff"/><circle cx="98" cy="54" r="7" fill="#5a3a1e"/><circle cx="98" cy="54" r="4.2" fill="#201409"/><circle cx="95.6" cy="52" r="2.4" fill="#fff"/><circle cx="100.2" cy="56.4" r="1.1" fill="#fff" opacity=".85"/>
-<ellipse cx="48" cy="70" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/><ellipse cx="112" cy="70" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/></svg>`,
-'ovelha':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gI" cx="50%" cy="40%" r="80%"><stop offset="0%" stop-color="#e2bd97"/><stop offset="100%" stop-color="#c69a6d"/></radialGradient></defs>
-<g fill="#fbf6ec"><circle cx="46" cy="40" r="14"/><circle cx="66" cy="28" r="15"/><circle cx="92" cy="27" r="15"/><circle cx="114" cy="40" r="14"/>
-<circle cx="124" cy="62" r="13"/><circle cx="36" cy="62" r="13"/><circle cx="120" cy="86" r="12"/><circle cx="40" cy="86" r="12"/></g>
-<ellipse cx="34" cy="66" rx="12" ry="7" fill="#c69a6d" transform="rotate(-20 34 66)"/>
-<ellipse cx="126" cy="66" rx="12" ry="7" fill="#c69a6d" transform="rotate(20 126 66)"/>
-<ellipse cx="80" cy="126" rx="32" ry="25" fill="#fbf6ec"/>
-<ellipse cx="62" cy="148" rx="10" ry="6" fill="#8a6a4c"/><ellipse cx="98" cy="148" rx="10" ry="6" fill="#8a6a4c"/>
-<ellipse cx="80" cy="66" rx="32" ry="30" fill="url(#gI)"/>
-<g fill="#fbf6ec"><circle cx="66" cy="40" r="9"/><circle cx="80" cy="36" r="10"/><circle cx="94" cy="40" r="9"/></g>
-<ellipse cx="80" cy="80" rx="14" ry="10" fill="#d9b48f"/>
-<path d="M72 84 a8 6 0 0 0 16 0 z" fill="#7a5238"/>
+<circle cx="61" cy="50" r="9" fill="#fff"/><circle cx="61" cy="51" r="7.5" fill="#5a3242"/><circle cx="61" cy="51.5" r="4.6" fill="#1d1410"/><circle cx="58.4" cy="48.5" r="2.6" fill="#fff"/><circle cx="63.2" cy="54" r="1.2" fill="#fff" opacity=".9"/>
+<circle cx="99" cy="50" r="9" fill="#fff"/><circle cx="99" cy="51" r="7.5" fill="#5a3242"/><circle cx="99" cy="51.5" r="4.6" fill="#1d1410"/><circle cx="96.4" cy="48.5" r="2.6" fill="#fff"/><circle cx="101.2" cy="54" r="1.2" fill="#fff" opacity=".9"/>
+<ellipse cx="48" cy="66" rx="6" ry="3.6" fill="#f5a3b0" opacity=".6"/><ellipse cx="112" cy="66" rx="6" ry="3.6" fill="#f5a3b0" opacity=".6"/></svg>`,
+'sapo':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gE" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#a8dd7a"/><stop offset="100%" stop-color="#6cb045"/></radialGradient></defs>
+<ellipse cx="42" cy="118" rx="16" ry="14" fill="#6cb045"/>
+<ellipse cx="118" cy="118" rx="16" ry="14" fill="#6cb045"/>
+<ellipse cx="80" cy="98" rx="46" ry="42" fill="url(#gE)"/>
+<circle cx="54" cy="52" r="17" fill="url(#gE)"/>
+<circle cx="106" cy="52" r="17" fill="url(#gE)"/>
+<circle cx="54" cy="52" r="12" fill="#fff"/>
+<circle cx="106" cy="52" r="12" fill="#fff"/>
+<circle cx="54" cy="53" r="8" fill="#7aa03a"/>
+<circle cx="106" cy="53" r="8" fill="#7aa03a"/>
+<circle cx="54" cy="54" r="5" fill="#201409"/>
+<circle cx="106" cy="54" r="5" fill="#201409"/>
+<circle cx="51" cy="50" r="2.6" fill="#fff"/>
+<circle cx="103" cy="50" r="2.6" fill="#fff"/>
+<ellipse cx="80" cy="116" rx="26" ry="18" fill="#e4f4c8"/>
+<circle cx="74" cy="80" r="2.2" fill="#3f6226"/><circle cx="86" cy="80" r="2.2" fill="#3f6226"/>
+<path d="M58 90 q22 16 44 0 q-22 10 -44 0z" fill="#3f6226"/>
+<ellipse cx="80" cy="97" rx="7" ry="3.5" fill="#ef9a9a"/>
+<ellipse cx="60" cy="138" rx="12" ry="6" fill="#7cc24f"/>
+<ellipse cx="100" cy="138" rx="12" ry="6" fill="#7cc24f"/>
+<circle cx="52" cy="136" r="3" fill="#a8dd7a"/><circle cx="60" cy="134" r="3" fill="#a8dd7a"/><circle cx="68" cy="136" r="3" fill="#a8dd7a"/>
+<circle cx="92" cy="136" r="3" fill="#a8dd7a"/><circle cx="100" cy="134" r="3" fill="#a8dd7a"/><circle cx="108" cy="136" r="3" fill="#a8dd7a"/>
+<ellipse cx="66" cy="76" rx="10" ry="6" fill="#fff" opacity=".18"/>
+<ellipse cx="46" cy="84" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/>
+<ellipse cx="114" cy="84" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/></svg>`,
+'leão':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gF" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#f6c479"/><stop offset="100%" stop-color="#e2a24c"/></radialGradient></defs>
+<path d="M116 124 q12 -2 14 -12" stroke="#e2a24c" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="131" cy="110" r="7" fill="#8a5742"/>
+<g fill="url(#gF)"><circle cx="80" cy="126" r="26"/><circle cx="62" cy="142" r="9"/><circle cx="98" cy="142" r="9"/></g>
+<g fill="#8a5742">
+<circle cx="80" cy="16" r="13"/><circle cx="102" cy="22" r="13"/><circle cx="120" cy="38" r="13"/><circle cx="128" cy="60" r="13"/><circle cx="126" cy="82" r="13"/><circle cx="112" cy="100" r="13"/><circle cx="92" cy="110" r="13"/><circle cx="68" cy="110" r="13"/><circle cx="48" cy="100" r="13"/><circle cx="34" cy="82" r="13"/><circle cx="32" cy="60" r="13"/><circle cx="40" cy="38" r="13"/><circle cx="58" cy="22" r="13"/>
+<circle cx="80" cy="62" r="44"/></g>
+<g fill="#a06a50"><circle cx="80" cy="24" r="10"/><circle cx="100" cy="30" r="10"/><circle cx="114" cy="46" r="10"/><circle cx="120" cy="66" r="10"/><circle cx="112" cy="88" r="10"/><circle cx="96" cy="102" r="10"/><circle cx="64" cy="102" r="10"/><circle cx="48" cy="88" r="10"/><circle cx="40" cy="66" r="10"/><circle cx="46" cy="46" r="10"/><circle cx="60" cy="30" r="10"/></g>
+<circle cx="80" cy="64" r="32" fill="url(#gF)"/>
+<ellipse cx="80" cy="78" rx="16" ry="12" fill="#f9e6c4"/>
+<polygon points="75,72 85,72 80,78" fill="#6b4226"/>
+<path d="M72 80 a8 6.5 0 0 0 16 0 z" fill="#5b3a2a"/>
+<ellipse cx="80" cy="84" rx="4" ry="2.4" fill="#ef9a9a"/>
+<circle cx="65" cy="58" r="9" fill="#fff"/><circle cx="65" cy="59" r="7.5" fill="#7a4a26"/><circle cx="65" cy="59.5" r="4.6" fill="#1d1410"/><circle cx="62.4" cy="56.5" r="2.6" fill="#fff"/><circle cx="67.2" cy="62" r="1.2" fill="#fff" opacity=".9"/>
+<circle cx="95" cy="58" r="9" fill="#fff"/><circle cx="95" cy="59" r="7.5" fill="#7a4a26"/><circle cx="95" cy="59.5" r="4.6" fill="#1d1410"/><circle cx="92.4" cy="56.5" r="2.6" fill="#fff"/><circle cx="97.2" cy="62" r="1.2" fill="#fff" opacity=".9"/>
+<ellipse cx="56" cy="72" rx="6" ry="3.6" fill="#f5a3b0" opacity=".6"/><ellipse cx="104" cy="72" rx="6" ry="3.6" fill="#f5a3b0" opacity=".6"/></svg>`,
+'cavalo':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gG" cx="50%" cy="32%" r="80%"><stop offset="0%" stop-color="#c9955e"/><stop offset="100%" stop-color="#9a6537"/></radialGradient></defs>
+<path d="M114 118 q14 6 12 24" stroke="#6b4226" stroke-width="9" fill="none" stroke-linecap="round"/>
+<g fill="url(#gG)"><circle cx="80" cy="120" r="30"/><circle cx="56" cy="126" r="13"/><circle cx="104" cy="126" r="13"/></g>
+<ellipse cx="80" cy="128" rx="15" ry="11" fill="#e8cda8"/>
+<rect x="62" y="138" width="10" height="10" rx="4" fill="#9a6537"/><rect x="88" y="138" width="10" height="10" rx="4" fill="#9a6537"/>
+<rect x="63" y="144" width="8" height="5" rx="2.5" fill="#4a2f18"/><rect x="89" y="144" width="8" height="5" rx="2.5" fill="#4a2f18"/>
+<polygon points="52,26 46,4 68,16" fill="#9a6537"/><polygon points="53,21 50,9 62,15" fill="#6b4226"/>
+<polygon points="108,26 114,4 92,16" fill="#9a6537"/><polygon points="107,21 110,9 98,15" fill="#6b4226"/>
+<g fill="url(#gG)"><circle cx="80" cy="58" r="37"/><circle cx="54" cy="44" r="11"/><circle cx="106" cy="44" r="11"/><circle cx="50" cy="62" r="10"/><circle cx="110" cy="62" r="10"/></g>
+<g fill="#6b4226"><circle cx="64" cy="26" r="9"/><circle cx="76" cy="22" r="9"/><circle cx="90" cy="24" r="9"/><circle cx="52" cy="36" r="8"/><circle cx="48" cy="50" r="8"/><circle cx="48" cy="64" r="7"/></g>
+<rect x="76" y="32" width="8" height="18" rx="4" fill="#fff" opacity=".7"/>
+<ellipse cx="80" cy="78" rx="20" ry="14" fill="#e8cda8"/>
+<ellipse cx="71" cy="75" rx="3" ry="4.2" fill="#7a5232"/><ellipse cx="89" cy="75" rx="3" ry="4.2" fill="#7a5232"/>
+<path d="M72 84 a8 6 0 0 0 16 0 z" fill="#7a5232"/>
 <ellipse cx="80" cy="87" rx="4" ry="2.4" fill="#ef9a9a"/>
-<circle cx="64" cy="62" r="8.5" fill="#fff"/><circle cx="64" cy="62" r="7" fill="#5a3a20"/><circle cx="64" cy="62" r="4.2" fill="#201409"/><circle cx="61.6" cy="60" r="2.4" fill="#fff"/><circle cx="66.2" cy="64.4" r="1.1" fill="#fff" opacity=".85"/>
-<circle cx="96" cy="62" r="8.5" fill="#fff"/><circle cx="96" cy="62" r="7" fill="#5a3a20"/><circle cx="96" cy="62" r="4.2" fill="#201409"/><circle cx="93.6" cy="60" r="2.4" fill="#fff"/><circle cx="98.2" cy="64.4" r="1.1" fill="#fff" opacity=".85"/>
-<ellipse cx="52" cy="74" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/><ellipse cx="108" cy="74" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/></svg>`,
-'galinha':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gJ" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#fffdf6"/><stop offset="100%" stop-color="#f0e4c8"/></radialGradient></defs>
-<circle cx="64" cy="22" r="8" fill="#e04040"/><circle cx="80" cy="17" r="9" fill="#e04040"/><circle cx="96" cy="22" r="8" fill="#e04040"/>
-<ellipse cx="52" cy="118" rx="11" ry="16" fill="#f0e4c8" transform="rotate(18 52 118)"/>
-<ellipse cx="108" cy="118" rx="11" ry="16" fill="#f0e4c8" transform="rotate(-18 108 118)"/>
-<ellipse cx="80" cy="124" rx="33" ry="27" fill="url(#gJ)"/>
-<ellipse cx="80" cy="131" rx="18" ry="14" fill="#fffdf6"/>
-<path d="M66 148 v6 m0 0 h-5 m5 0 h5 M94 148 v6 m0 0 h-5 m5 0 h5" stroke="#f5a01e" stroke-width="3" fill="none" stroke-linecap="round"/>
-<circle cx="80" cy="62" r="38" fill="url(#gJ)"/>
-<polygon points="80,66 68,72 80,80 92,72" fill="#f5a01e"/>
-<path d="M72 80 a8 6 0 0 0 16 0 z" fill="#c96a10"/>
-<ellipse cx="80" cy="90" rx="5" ry="6" fill="#e04040"/>
-<circle cx="62" cy="54" r="8.5" fill="#fff"/><circle cx="62" cy="54" r="7" fill="#5a3a20"/><circle cx="62" cy="54" r="4.2" fill="#201409"/><circle cx="59.6" cy="52" r="2.4" fill="#fff"/><circle cx="64.2" cy="56.4" r="1.1" fill="#fff" opacity=".85"/>
-<circle cx="98" cy="54" r="8.5" fill="#fff"/><circle cx="98" cy="54" r="7" fill="#5a3a20"/><circle cx="98" cy="54" r="4.2" fill="#201409"/><circle cx="95.6" cy="52" r="2.4" fill="#fff"/><circle cx="100.2" cy="56.4" r="1.1" fill="#fff" opacity=".85"/>
-<ellipse cx="50" cy="70" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/><ellipse cx="110" cy="70" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/></svg>`,
+<circle cx="63" cy="52" r="9" fill="#fff"/><circle cx="63" cy="53" r="7.5" fill="#5a3a1e"/><circle cx="63" cy="53.5" r="4.6" fill="#1d1410"/><circle cx="60.4" cy="50.5" r="2.6" fill="#fff"/><circle cx="65.2" cy="56" r="1.2" fill="#fff" opacity=".9"/>
+<circle cx="97" cy="52" r="9" fill="#fff"/><circle cx="97" cy="53" r="7.5" fill="#5a3a1e"/><circle cx="97" cy="53.5" r="4.6" fill="#1d1410"/><circle cx="94.4" cy="50.5" r="2.6" fill="#fff"/><circle cx="99.2" cy="56" r="1.2" fill="#fff" opacity=".9"/>
+<ellipse cx="50" cy="68" rx="6" ry="3.6" fill="#f5a3b0" opacity=".5"/><ellipse cx="110" cy="68" rx="6" ry="3.6" fill="#f5a3b0" opacity=".5"/></svg>`,
+'pato':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gH" cx="50%" cy="32%" r="80%"><stop offset="0%" stop-color="#ffe98f"/><stop offset="100%" stop-color="#f5c243"/></radialGradient></defs>
+<path d="M112 106 q14 -8 16 -20 q6 14 -6 26z" fill="#f5c243"/>
+<g fill="url(#gH)"><circle cx="80" cy="118" r="30"/><circle cx="56" cy="124" r="13"/><circle cx="104" cy="124" r="13"/><circle cx="60" cy="104" r="12"/><circle cx="100" cy="104" r="12"/></g>
+<ellipse cx="80" cy="126" rx="15" ry="11" fill="#fff6d8"/>
+<ellipse cx="64" cy="146" rx="11" ry="5.5" fill="#f5941e"/><ellipse cx="96" cy="146" rx="11" ry="5.5" fill="#f5941e"/>
+<g fill="url(#gH)"><circle cx="80" cy="56" r="36"/><circle cx="54" cy="42" r="11"/><circle cx="106" cy="42" r="11"/><circle cx="50" cy="58" r="10"/><circle cx="110" cy="58" r="10"/><circle cx="56" cy="72" r="9"/><circle cx="104" cy="72" r="9"/><circle cx="68" cy="26" r="9"/><circle cx="84" cy="24" r="9"/></g>
+<path d="M76 20 q3 -7 10 -6 q-3 7 -7 8z" fill="#f5c243"/>
+<path d="M60 66 q20 -8 40 0 q-3 9 -20 9 q-17 0 -20 -9z" fill="#f5941e"/>
+<path d="M66 77 q14 7 28 0 q-7 9 -14 9 q-7 0 -14 -9z" fill="#e8830f"/>
+<circle cx="70" cy="66" r="1.6" fill="#c96f10"/><circle cx="90" cy="66" r="1.6" fill="#c96f10"/>
+<circle cx="62" cy="48" r="9" fill="#fff"/><circle cx="62" cy="49" r="7.5" fill="#5a3a1e"/><circle cx="62" cy="49.5" r="4.6" fill="#1d1410"/><circle cx="59.4" cy="46.5" r="2.6" fill="#fff"/><circle cx="64.2" cy="52" r="1.2" fill="#fff" opacity=".9"/>
+<circle cx="98" cy="48" r="9" fill="#fff"/><circle cx="98" cy="49" r="7.5" fill="#5a3a1e"/><circle cx="98" cy="49.5" r="4.6" fill="#1d1410"/><circle cx="95.4" cy="46.5" r="2.6" fill="#fff"/><circle cx="100.2" cy="52" r="1.2" fill="#fff" opacity=".9"/>
+<ellipse cx="48" cy="64" rx="6" ry="3.6" fill="#f5a3b0" opacity=".6"/><ellipse cx="112" cy="64" rx="6" ry="3.6" fill="#f5a3b0" opacity=".6"/></svg>`,
+'ovelha':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gI" cx="50%" cy="30%" r="85%"><stop offset="0%" stop-color="#4a4a52"/><stop offset="100%" stop-color="#2b2b31"/></radialGradient></defs>
+<g fill="url(#gI)">
+<circle cx="80" cy="112" r="32"/><circle cx="54" cy="104" r="14"/><circle cx="106" cy="104" r="14"/>
+<circle cx="58" cy="124" r="13"/><circle cx="102" cy="124" r="13"/>
+<circle cx="66" cy="92" r="13"/><circle cx="94" cy="92" r="13"/><circle cx="80" cy="96" r="20"/></g>
+<rect x="62" y="132" width="9" height="16" rx="4.5" fill="#1d1d22"/><rect x="89" y="132" width="9" height="16" rx="4.5" fill="#1d1d22"/>
+<ellipse cx="40" cy="58" rx="11" ry="6" fill="#2b2b31" transform="rotate(-18 40 58)"/>
+<ellipse cx="120" cy="58" rx="11" ry="6" fill="#2b2b31" transform="rotate(18 120 58)"/>
+<g fill="url(#gI)"><circle cx="80" cy="56" r="34"/><circle cx="56" cy="40" r="11"/><circle cx="70" cy="30" r="11"/><circle cx="88" cy="28" r="11"/><circle cx="102" cy="36" r="11"/><circle cx="110" cy="50" r="10"/><circle cx="50" cy="52" r="10"/><circle cx="108" cy="66" r="9"/><circle cx="52" cy="68" r="9"/></g>
+<ellipse cx="80" cy="66" rx="20" ry="17" fill="#5a5058"/>
+<ellipse cx="80" cy="76" rx="11" ry="8" fill="#6b6068"/>
+<path d="M73 78 a7 5.5 0 0 0 14 0 z" fill="#3a3036"/>
+<ellipse cx="80" cy="81" rx="3.5" ry="2" fill="#ef9a9a"/>
+<circle cx="66" cy="56" r="9" fill="#fff"/><circle cx="66" cy="57" r="7.5" fill="#8a6a4a"/><circle cx="66" cy="57.5" r="4.6" fill="#1d1410"/><circle cx="63.4" cy="54.5" r="2.6" fill="#fff"/><circle cx="68.2" cy="60" r="1.2" fill="#fff" opacity=".9"/>
+<circle cx="94" cy="56" r="9" fill="#fff"/><circle cx="94" cy="57" r="7.5" fill="#8a6a4a"/><circle cx="94" cy="57.5" r="4.6" fill="#1d1410"/><circle cx="91.4" cy="54.5" r="2.6" fill="#fff"/><circle cx="96.2" cy="60" r="1.2" fill="#fff" opacity=".9"/>
+<ellipse cx="54" cy="70" rx="5" ry="3" fill="#f5a3b0" opacity=".4"/><ellipse cx="106" cy="70" rx="5" ry="3" fill="#f5a3b0" opacity=".4"/></svg>`,
+'galinha':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gJ" cx="50%" cy="32%" r="80%"><stop offset="0%" stop-color="#fffdf6"/><stop offset="100%" stop-color="#eee0c2"/></radialGradient></defs>
+<circle cx="64" cy="20" r="8" fill="#e04040"/><circle cx="80" cy="15" r="9" fill="#e04040"/><circle cx="96" cy="20" r="8" fill="#e04040"/>
+<g fill="url(#gJ)"><circle cx="80" cy="116" r="30"/><circle cx="56" cy="122" r="13"/><circle cx="104" cy="122" r="13"/><circle cx="60" cy="102" r="12"/><circle cx="100" cy="102" r="12"/></g>
+<ellipse cx="80" cy="124" rx="15" ry="11" fill="#fffdf6"/>
+<path d="M66 142 v6 m0 0 h-5 m5 0 h5 M94 142 v6 m0 0 h-5 m5 0 h5" stroke="#f5a01e" stroke-width="3" fill="none" stroke-linecap="round"/>
+<g fill="url(#gJ)"><circle cx="80" cy="56" r="34"/><circle cx="56" cy="42" r="11"/><circle cx="104" cy="42" r="11"/><circle cx="52" cy="58" r="10"/><circle cx="108" cy="58" r="10"/><circle cx="56" cy="72" r="9"/><circle cx="104" cy="72" r="9"/></g>
+<polygon points="80,62 68,68 80,76 92,68" fill="#f5a01e"/>
+<path d="M72 76 a8 6 0 0 0 16 0 z" fill="#c96a10"/>
+<ellipse cx="80" cy="86" rx="5" ry="6" fill="#e04040"/>
+<circle cx="63" cy="50" r="9" fill="#fff"/><circle cx="63" cy="51" r="7.5" fill="#5a3a20"/><circle cx="63" cy="51.5" r="4.6" fill="#1d1410"/><circle cx="60.4" cy="48.5" r="2.6" fill="#fff"/><circle cx="65.2" cy="54" r="1.2" fill="#fff" opacity=".9"/>
+<circle cx="97" cy="50" r="9" fill="#fff"/><circle cx="97" cy="51" r="7.5" fill="#5a3a20"/><circle cx="97" cy="51.5" r="4.6" fill="#1d1410"/><circle cx="94.4" cy="48.5" r="2.6" fill="#fff"/><circle cx="99.2" cy="54" r="1.2" fill="#fff" opacity=".9"/>
+<ellipse cx="50" cy="64" rx="6" ry="3.6" fill="#f5a3b0" opacity=".6"/><ellipse cx="110" cy="64" rx="6" ry="3.6" fill="#f5a3b0" opacity=".6"/></svg>`,
 'elefante':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gK" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#b7c8dc"/><stop offset="100%" stop-color="#8ba3bf"/></radialGradient></defs>
 <ellipse cx="34" cy="58" rx="22" ry="26" fill="#8ba3bf"/><ellipse cx="34" cy="58" rx="13" ry="17" fill="#e8b7c8"/>
 <ellipse cx="126" cy="58" rx="22" ry="26" fill="#8ba3bf"/><ellipse cx="126" cy="58" rx="13" ry="17" fill="#e8b7c8"/>
-<ellipse cx="80" cy="124" rx="34" ry="27" fill="url(#gK)"/>
-<ellipse cx="80" cy="131" rx="20" ry="16" fill="#d5e2ee"/>
-<ellipse cx="60" cy="147" rx="11" ry="7" fill="#b7c8dc"/><ellipse cx="100" cy="147" rx="11" ry="7" fill="#b7c8dc"/>
-<circle cx="80" cy="62" r="40" fill="url(#gK)"/>
+<g fill="url(#gK)"><circle cx="80" cy="124" r="30"/><circle cx="58" cy="128" r="12"/><circle cx="102" cy="128" r="12"/></g>
+<ellipse cx="80" cy="132" rx="16" ry="11" fill="#d5e2ee"/>
+<ellipse cx="64" cy="146" rx="10" ry="6" fill="#b7c8dc"/><ellipse cx="96" cy="146" rx="10" ry="6" fill="#b7c8dc"/>
+<g fill="url(#gK)"><circle cx="80" cy="62" r="40"/><circle cx="56" cy="34" r="11"/><circle cx="72" cy="26" r="11"/><circle cx="90" cy="26" r="11"/><circle cx="104" cy="34" r="11"/></g>
 <path d="M76 22 q4 -6 10 -4 q-3 6 -7 7z" fill="#8ba3bf"/>
 <path d="M68 78 q-8 4 -14 2" stroke="#f6f2e8" stroke-width="4.5" fill="none" stroke-linecap="round"/>
 <path d="M92 78 q8 4 14 2" stroke="#f6f2e8" stroke-width="4.5" fill="none" stroke-linecap="round"/>
 <path d="M80 66 q-2 18 -10 24 q-5 4 -9 1" stroke="#9db3ca" stroke-width="12" fill="none" stroke-linecap="round"/>
-<circle cx="62" cy="54" r="8.5" fill="#fff"/><circle cx="62" cy="54" r="7" fill="#4a627e"/><circle cx="62" cy="54" r="4.2" fill="#201409"/><circle cx="59.6" cy="52" r="2.4" fill="#fff"/><circle cx="64.2" cy="56.4" r="1.1" fill="#fff" opacity=".85"/>
-<circle cx="98" cy="54" r="8.5" fill="#fff"/><circle cx="98" cy="54" r="7" fill="#4a627e"/><circle cx="98" cy="54" r="4.2" fill="#201409"/><circle cx="95.6" cy="52" r="2.4" fill="#fff"/><circle cx="100.2" cy="56.4" r="1.1" fill="#fff" opacity=".85"/>
-<ellipse cx="48" cy="70" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/><ellipse cx="112" cy="70" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/></svg>`,
-'macaco':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gL" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#b98354"/><stop offset="100%" stop-color="#96603a"/></radialGradient></defs>
-<path d="M116 120 q20 -4 20 -24 q0 -10 -9 -11" stroke="#96603a" stroke-width="6" fill="none" stroke-linecap="round"/>
-<circle cx="38" cy="60" r="13" fill="#96603a"/><circle cx="38" cy="60" r="7" fill="#eecfa8"/>
-<circle cx="122" cy="60" r="13" fill="#96603a"/><circle cx="122" cy="60" r="7" fill="#eecfa8"/>
-<ellipse cx="80" cy="124" rx="32" ry="26" fill="url(#gL)"/>
-<ellipse cx="80" cy="131" rx="18" ry="15" fill="#eecfa8"/>
-<ellipse cx="61" cy="147" rx="10" ry="7" fill="#b98354"/><ellipse cx="99" cy="147" rx="10" ry="7" fill="#b98354"/>
-<circle cx="80" cy="62" r="39" fill="url(#gL)"/>
-<path d="M76 24 q4 -6 10 -4 q-3 6 -7 7z" fill="#96603a"/>
-<ellipse cx="80" cy="56" rx="24" ry="14" fill="#eecfa8"/>
-<ellipse cx="80" cy="76" rx="20" ry="14" fill="#eecfa8"/>
-<ellipse cx="74" cy="71" rx="2.2" ry="3" fill="#6b4a2e"/><ellipse cx="86" cy="71" rx="2.2" ry="3" fill="#6b4a2e"/>
-<path d="M72 80 a8 6.5 0 0 0 16 0 z" fill="#5b3a2a"/>
-<ellipse cx="80" cy="84" rx="4" ry="2.5" fill="#ef9a9a"/>
-<circle cx="64" cy="52" r="8.5" fill="#fff"/><circle cx="64" cy="52" r="7" fill="#5a3a1e"/><circle cx="64" cy="52" r="4.2" fill="#201409"/><circle cx="61.6" cy="50" r="2.4" fill="#fff"/><circle cx="66.2" cy="54.4" r="1.1" fill="#fff" opacity=".85"/>
-<circle cx="96" cy="52" r="8.5" fill="#fff"/><circle cx="96" cy="52" r="7" fill="#5a3a1e"/><circle cx="96" cy="52" r="4.2" fill="#201409"/><circle cx="93.6" cy="50" r="2.4" fill="#fff"/><circle cx="98.2" cy="54.4" r="1.1" fill="#fff" opacity=".85"/>
-<ellipse cx="50" cy="68" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/><ellipse cx="110" cy="68" rx="6" ry="3.5" fill="#f5a3b0" opacity=".6"/></svg>`};
+<circle cx="62" cy="54" r="9" fill="#fff"/><circle cx="62" cy="55" r="7.5" fill="#4a627e"/><circle cx="62" cy="55.5" r="4.6" fill="#1d1410"/><circle cx="59.4" cy="52.5" r="2.6" fill="#fff"/><circle cx="64.2" cy="58" r="1.2" fill="#fff" opacity=".9"/>
+<circle cx="98" cy="54" r="9" fill="#fff"/><circle cx="98" cy="55" r="7.5" fill="#4a627e"/><circle cx="98" cy="55.5" r="4.6" fill="#1d1410"/><circle cx="95.4" cy="52.5" r="2.6" fill="#fff"/><circle cx="100.2" cy="58" r="1.2" fill="#fff" opacity=".9"/>
+<ellipse cx="48" cy="70" rx="6" ry="3.6" fill="#f5a3b0" opacity=".6"/><ellipse cx="112" cy="70" rx="6" ry="3.6" fill="#f5a3b0" opacity=".6"/></svg>`,
+'macaco':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gL" cx="50%" cy="32%" r="80%"><stop offset="0%" stop-color="#b98354"/><stop offset="100%" stop-color="#8f5c33"/></radialGradient></defs>
+<path d="M118 116 q20 -4 20 -24 q0 -10 -9 -11" stroke="#8f5c33" stroke-width="6" fill="none" stroke-linecap="round"/>
+<g fill="url(#gL)"><circle cx="80" cy="118" r="28"/><circle cx="58" cy="124" r="12"/><circle cx="102" cy="124" r="12"/></g>
+<ellipse cx="80" cy="126" rx="14" ry="10" fill="#eecfa8"/>
+<ellipse cx="64" cy="144" rx="9" ry="6" fill="#b98354"/><ellipse cx="96" cy="144" rx="9" ry="6" fill="#b98354"/>
+<circle cx="40" cy="56" r="12" fill="#8f5c33"/><circle cx="40" cy="56" r="6.5" fill="#eecfa8"/>
+<circle cx="120" cy="56" r="12" fill="#8f5c33"/><circle cx="120" cy="56" r="6.5" fill="#eecfa8"/>
+<g fill="url(#gL)"><circle cx="80" cy="56" r="35"/><circle cx="56" cy="40" r="10"/><circle cx="104" cy="40" r="10"/><circle cx="52" cy="56" r="9"/><circle cx="108" cy="56" r="9"/></g>
+<path d="M76 22 q4 -6 10 -4 q-3 6 -7 7z" fill="#8f5c33"/>
+<ellipse cx="80" cy="50" rx="22" ry="13" fill="#eecfa8"/>
+<ellipse cx="80" cy="70" rx="18" ry="13" fill="#eecfa8"/>
+<ellipse cx="74" cy="66" rx="2.2" ry="3" fill="#6b4a2e"/><ellipse cx="86" cy="66" rx="2.2" ry="3" fill="#6b4a2e"/>
+<path d="M72 74 a8 6.5 0 0 0 16 0 z" fill="#5b3a2a"/>
+<ellipse cx="80" cy="78" rx="4" ry="2.4" fill="#ef9a9a"/>
+<circle cx="65" cy="46" r="9" fill="#fff"/><circle cx="65" cy="47" r="7.5" fill="#5a3a1e"/><circle cx="65" cy="47.5" r="4.6" fill="#1d1410"/><circle cx="62.4" cy="44.5" r="2.6" fill="#fff"/><circle cx="67.2" cy="50" r="1.2" fill="#fff" opacity=".9"/>
+<circle cx="95" cy="46" r="9" fill="#fff"/><circle cx="95" cy="47" r="7.5" fill="#5a3a1e"/><circle cx="95" cy="47.5" r="4.6" fill="#1d1410"/><circle cx="92.4" cy="44.5" r="2.6" fill="#fff"/><circle cx="97.2" cy="50" r="1.2" fill="#fff" opacity=".9"/>
+<ellipse cx="52" cy="62" rx="5" ry="3" fill="#f5a3b0" opacity=".5"/><ellipse cx="108" cy="62" rx="5" ry="3" fill="#f5a3b0" opacity=".5"/>
+<path d="M62 108 q18 16 40 2 q-2 12 -20 14 q-16 1 -20 -16z" fill="#ffd93d"/>
+<path d="M60 106 q3 -3 6 -2 M102 108 q3 0 5 3" stroke="#8a6a1a" stroke-width="3" stroke-linecap="round"/>
+<path d="M62 96 q-4 8 2 14" stroke="#8f5c33" stroke-width="7" fill="none" stroke-linecap="round"/>
+<path d="M98 96 q4 8 -2 14" stroke="#8f5c33" stroke-width="7" fill="none" stroke-linecap="round"/></svg>`};
 const ART_EMOJI={'🐶':'cachorro','🐱':'gato','🐮':'vaca','🐷':'porco','🐸':'sapo','🦁':'leão','🐴':'cavalo','🦆':'pato','🐑':'ovelha','🐔':'galinha','🐘':'elefante','🐵':'macaco'};
 function imgHTML(e,cls=''){
  const a=ART_EMOJI[e];
@@ -783,7 +797,9 @@ const SHAPES=[
  {n:'triângulo',a:'o',svg:'<polygon points="50,10 92,86 8,86"/>'},
  {n:'estrela',a:'a',svg:'<polygon points="50,5 61.2,34.6 92.8,36.1 68.1,55.9 76.5,86.4 50,69 23.5,86.4 31.9,55.9 7.2,36.1 38.8,34.6"/>'},
  {n:'coração',a:'o',svg:'<path d="M50 88 C20 62 8 42 16 26 C22 12 40 12 50 28 C60 12 78 12 84 26 C92 42 80 62 50 88 Z"/>'},
- {n:'losango',a:'o',svg:'<polygon points="50,6 92,50 50,94 8,50"/>'}];
+ {n:'losango',a:'o',svg:'<polygon points="50,6 92,50 50,94 8,50"/>'},
+ {n:'retângulo',a:'o',svg:'<rect x="8" y="24" width="84" height="52" rx="10"/>'},
+ {n:'oval',a:'o',svg:'<ellipse cx="50" cy="50" rx="44" ry="30"/>'}];
 const COUNT_ITEMS=[
  {e:'🍎',s:'maçã',p:'maçãs',f:1},{e:'🍌',s:'banana',p:'bananas',f:1},
  {e:'⚽',s:'bola',p:'bolas',f:1},{e:'🎈',s:'balão',p:'balões'},
@@ -797,7 +813,7 @@ const LETTERS=[
  {l:'O',w:'Ovo',e:'🥚'},{l:'P',w:'Pato',e:'🦆'},{l:'S',w:'Sapo',e:'🐸'},
  {l:'T',w:'Tartaruga',e:'🐢'},{l:'U',w:'Uva',e:'🍇'},{l:'V',w:'Vaca',e:'🐮'}];
 
-/* ===== modo conhecer ===== */
+/* ===== modo conhecer (Nível 1 — toca TODOS) ===== */
 const EXPL_NUMS=[
  {n:1,w:'um',e:'🎈'},{n:2,w:'dois',e:'🐤'},{n:3,w:'três',e:'⭐'},
  {n:4,w:'quatro',e:'🍎'},{n:5,w:'cinco',e:'🐠'}].map(x=>({key:x.n,...x}));
@@ -811,24 +827,8 @@ const EXPL_LETTERS=[
  {l:'S',w:'Sapo',e:'🐸'},{l:'T',w:'Tartaruga',e:'🐢'},{l:'U',w:'Uva',e:'🍇'},
  {l:'V',w:'Vaca',e:'🐮'},{l:'W',w:'Wafer',e:'🧇'},{l:'X',w:'Xícara',e:'☕'},
  {l:'Y',w:'Ioga',e:'🧘'},{l:'Z',w:'Zebra',e:'🦓'}].map(x=>({key:x.l,...x}));
-const EXPL_SHAPES=[
- {key:'circulo',n:'círculo',c:'#ff5252',svg:'<circle cx="50" cy="50" r="40"/>',say:'Esse é o círculo! Ele é redondo como uma bola!'},
- {key:'quadrado',n:'quadrado',c:'#448aff',svg:'<rect x="14" y="14" width="72" height="72" rx="10"/>',say:'Esse é o quadrado! Ele tem quatro lados iguais!'},
- {key:'triangulo',n:'triângulo',c:'#4cd964',svg:'<polygon points="50,10 92,86 8,86"/>',say:'Esse é o triângulo! Ele tem três bicos!'},
- {key:'retangulo',n:'retângulo',c:'#a06bff',svg:'<rect x="8" y="24" width="84" height="52" rx="10"/>',say:'Esse é o retângulo! Ele parece uma porta!'},
- {key:'estrela',n:'estrela',c:'#ffc93d',svg:'<polygon points="50,5 61.2,34.6 92.8,36.1 68.1,55.9 76.5,86.4 50,69 23.5,86.4 31.9,55.9 7.2,36.1 38.8,34.6"/>',say:'Essa é a estrela! Ela brilha no céu!'},
- {key:'coracao',n:'coração',c:'#ff7bac',svg:'<path d="M50 88 C20 62 8 42 16 26 C22 12 40 12 50 28 C60 12 78 12 84 26 C92 42 80 62 50 88 Z"/>',say:'Esse é o coração! É a forma do amor!'},
- {key:'losango',n:'losango',c:'#ff9838',svg:'<polygon points="50,6 92,50 50,94 8,50"/>',say:'Esse é o losango! Ele parece uma pipa!'},
- {key:'oval',n:'oval',c:'#7ec8ff',svg:'<ellipse cx="50" cy="50" rx="44" ry="30"/>',say:'Esse é o oval! Ele parece um ovo!'}];
-const EXPL_COLORS=[
- {key:'vermelho',n:'vermelho',h:'#ff5252',say:'Essa é a cor vermelha! Vermelha como o morango!'},
- {key:'azul',n:'azul',h:'#448aff',say:'Essa é a cor azul! Azul como o céu!'},
- {key:'amarelo',n:'amarelo',h:'#ffd93d',say:'Essa é a cor amarela! Amarela como o sol!'},
- {key:'verde',n:'verde',h:'#4cd964',say:'Essa é a cor verde! Verde como a grama!'},
- {key:'roxo',n:'roxo',h:'#a06bff',say:'Essa é a cor roxa! Roxa como a uva!'},
- {key:'laranja',n:'laranja',h:'#ff9838',say:'Essa é a cor laranja! Laranja como a laranja!'},
- {key:'rosa',n:'rosa',h:'#ff7bac',say:'Essa é a cor rosa! Rosa como a flor!'},
- {key:'marrom',n:'marrom',h:'#a5764c',say:'Essa é a cor marrom! Marrom como o chocolate!'}];
+const EXPL_SHAPES=SHAPES.map((s,i)=>({key:'f'+i,...s}));
+const EXPL_COLORS=COLORS.map((c,i)=>({key:'c'+i,...c}));
 const NOTES=[
  {key:'do',n:'Dó',f:523.25,h:'#ff5252'},
  {key:'re',n:'Ré',f:587.33,h:'#ff9838'},
@@ -837,7 +837,9 @@ const NOTES=[
  {key:'sol',n:'Sol',f:783.99,h:'#448aff'},
  {key:'la',n:'Lá',f:880,h:'#a06bff'},
  {key:'si',n:'Si',f:987.77,h:'#ff7bac'}];
-const EXP_TARGET={numbers:5,letters:10,shapes:6,animals:8,colors:6,music:7};
+/* Nível 1: completa só tocando em TODOS os elementos apresentados */
+const EXP_TARGET={numbers:EXPL_NUMS.length,letters:EXPL_LETTERS.length,shapes:EXPL_SHAPES.length,
+ animals:ANIMALS.length,colors:EXPL_COLORS.length,music:NOTES.length};
 
 const SYL=[
  {s:'BA',it:[{w:'Banana',e:'🍌'},{w:'Balão',e:'🎈'},{w:'Bola',e:'⚽'}]},
@@ -889,7 +891,7 @@ const NUMW={m:['','um','dois','três','quatro','cinco','seis','sete','oito','nov
  f:['','uma','duas','três','quatro','cinco','seis','sete','oito','nove']};
 const PRAISE=['Muito bem!','Parabéns!','Você é demais!','Isso aí!','Que incrível!','Excelente!','Você conseguiu!'];
 const TRYAGAIN=['Tente de novo!','Quase! Vamos tentar outra vez!','Hmm, tenta outra vez!'];
-const BURST_E=['🎉','','🥳','✨','🎊','🏅'];
+const BURST_E=['🎉','','🥳','✨','🎊',''];
 
 /* ===== a trilha ===== */
 const TRILHA=[
@@ -1063,10 +1065,12 @@ function mkGrid(parent,extra=''){const g=document.createElement('div');g.classNa
 function mkOpt(){const b=document.createElement('button');b.className='opt';return b;}
 function resetStage(){const s=$('#stage');s.className='';s.innerHTML='';return s;}
 
+/* --- Nível 1: conhecer (toca TODOS) --- */
 function qExplore(){
  const K=G.kind;
  const seq=G.seq;
  const stage=resetStage();
+ stage.classList.add('scroll-stage');
  const wrap=document.createElement('div');wrap.className='v-wrap';
  const disp=document.createElement('div');disp.className='exp-show';
  disp.innerHTML='<span class="exp-q">👆 Toque para conhecer!</span>';
@@ -1420,7 +1424,7 @@ function celebrate(){
    Prog.d.unlocked++;Prog.save();newLevel=TRILHA[li+1];}
  SFX.good();setTimeout(()=>SFX.star(),400);confetti(110);
  clearInterval(G.confTimer);G.confTimer=setInterval(()=>confetti(16),1300);
- $('#winEmoji').textContent=pick(['🐰','🦁','🐶','🐸','🦄','🐼','🐵','🦉']);
+ $('#winEmoji').textContent=pick(['🐰','','🐶','','🦄','','🐵','']);
  const row=$('#winStars');row.innerHTML='';
  for(let i=0;i<5;i++){const s=document.createElement('span');s.textContent='⭐';
    s.style.animationDelay=(.25+i*.18)+'s';row.appendChild(s);}
