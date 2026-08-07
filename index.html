@@ -105,13 +105,13 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 .wrong{animation:shake .5s ease!important}
 .disabled{opacity:.35;filter:grayscale(.8);pointer-events:none!important}
 
-/* ilustrações dos animais */
+/* ilustrações dos animais (corpo inteiro) */
 .art{display:inline-block;line-height:0}
 .art svg{width:100%;height:100%;display:block}
-.opt .big .art{width:16vmin;height:16vmin}
-.exp-btn .art{width:76%;height:76%}
-.art-show{width:16vmin;height:16vmin;font-size:13vmin;display:inline-flex;align-items:center;justify-content:center;line-height:1}
-.shadow-e svg{width:18vmin;height:18vmin;display:block}
+.opt .big .art{width:18vmin;height:15vmin}
+.exp-btn .art{width:86%;height:72%}
+.art-show{width:19vmin;height:15vmin;font-size:13vmin;display:inline-flex;align-items:center;justify-content:center;line-height:1}
+.shadow-e svg{width:20vmin;height:16vmin;display:block}
 
 /* modo conhecer (bebê) */
 .exp-show{background:rgba(255,255,255,.92);border-radius:6vmin;min-height:24vmin;width:min(92vmin,760px);display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2.5vmin;padding:2.5vmin 5vmin;box-shadow:0 1vmin 0 rgba(0,0,0,.08);animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
@@ -335,7 +335,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 
 <div id="pGate" class="overlay hidden">
   <div class="p-card center">
-    <div class="p-title">👨‍👩‍👧 Área dos Pais</div>
+    <div class="p-title">👨‍👩‍ Área dos Pais</div>
     <p class="p-note">Para entrar, responda:</p>
     <div class="p-q" id="pQ"></div>
     <div class="p-opts" id="pOpts"></div>
@@ -346,7 +346,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 <div id="pPanel" class="overlay hidden">
   <div class="p-card">
     <div class="p-head">
-      <div class="p-title">👨‍‍👧 Área dos Pais</div>
+      <div class="p-title">👨‍👩‍ Área dos Pais</div>
       <button class="p-x" id="pClose">✖</button>
     </div>
 
@@ -435,9 +435,9 @@ const SFX={ctx:null,muted:false,
  note(f){this.tone(f,.7,'triangle',0,.25);this.tone(f*2,.5,'sine',0,.07);},
  star(){this.tone(1319,.12,'triangle',0,.2);this.tone(1760,.2,'triangle',.1,.2)}};
 
-/* ===== voz — lenta, sem cortes, melhor voz disponível ===== */
+/* ===== voz — lenta, sem cortes, com aviso de fim de fala ===== */
 const VOICE={
- voice:null,rate:.82,pitch:1.12,cur:null,pend:null,fb:null,manual:false,
+ voice:null,rate:.82,pitch:1.12,cur:null,pend:null,fb:null,cb:null,manual:false,
  init(){
    if(!('speechSynthesis'in window))return;
    const load=()=>{
@@ -468,9 +468,10 @@ const VOICE={
      return s;};
    return [...pt].sort((a,b)=>score(b)-score(a))[0];
  },
- say(text){
-   if(!text||SFX.muted||!('speechSynthesis'in window))return;
-   this.pend=text;
+ say(text,cb){
+   if(!text){if(cb)cb();return;}
+   if(SFX.muted||!('speechSynthesis'in window)){if(cb)setTimeout(cb,400);return;}
+   this.pend=text;this.cb=cb||null;
    if(speechSynthesis.speaking||speechSynthesis.pending){
      clearTimeout(this.fb);
      this.fb=setTimeout(()=>this.flush(),4000);
@@ -481,12 +482,13 @@ const VOICE={
  flush(){
    const text=this.pend;if(!text)return;
    this.pend=null;clearTimeout(this.fb);
+   const cb=this.cb;this.cb=null;
    const u=new SpeechSynthesisUtterance(text);
    if(this.voice)u.voice=this.voice;
    u.lang=(this.voice&&this.voice.lang)||'pt-BR';
    u.rate=this.rate;u.pitch=this.pitch;
-   const done=()=>{if(this.cur===u){this.cur=null;if(this.pend)this.flush();}};
-   u.onend=done;u.onerror=done;
+   u.onend=()=>{if(this.cur===u){this.cur=null;if(cb)cb();if(this.pend)this.flush();}};
+   u.onerror=()=>{if(this.cur===u){this.cur=null;if(this.pend)this.flush();}};
    this.cur=u;
    try{speechSynthesis.cancel();}catch(e){}
    setTimeout(()=>{try{speechSynthesis.speak(u);}catch(e){}},90);
@@ -568,136 +570,189 @@ const RealSFX={cache:{},ok:{},
  }};
 const playAnimal=n=>{SFX.ensure();RealSFX.play(n);};
 
-/* ===== ILUSTRAÇÕES: estilo livro infantil ===== */
+/* ===== ILUSTRAÇÕES: animais de corpo inteiro, estilo cartoon realista ===== */
 const ART={
-'cachorro':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grCAO" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#eec27f"/><stop offset="100%" stop-color="#c98a4b"/></radialGradient></defs>
-<ellipse cx="27" cy="55" rx="13" ry="22" fill="#a5683a" transform="rotate(16 27 55)"/>
-<ellipse cx="93" cy="55" rx="13" ry="22" fill="#a5683a" transform="rotate(-16 93 55)"/>
-<circle cx="60" cy="60" r="38" fill="url(#grCAO)"/>
-<ellipse cx="60" cy="77" rx="19" ry="14" fill="#f9ead2"/>
-<ellipse cx="60" cy="70" rx="7" ry="5.5" fill="#4a3325"/>
-<path d="M60 76 q0 7 -9 9 M60 76 q0 7 9 9" stroke="#4a3325" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-<circle cx="44" cy="53" r="5.2" fill="#33241a"/><circle cx="76" cy="53" r="5.2" fill="#33241a"/>
-<circle cx="45.8" cy="51.2" r="1.7" fill="#fff"/><circle cx="77.8" cy="51.2" r="1.7" fill="#fff"/>
-<ellipse cx="35" cy="66" rx="5.5" ry="3.2" fill="#f2a6a0" opacity=".55"/><ellipse cx="85" cy="66" rx="5.5" ry="3.2" fill="#f2a6a0" opacity=".55"/></svg>`,
-'gato':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grGAT" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#f6b26a"/><stop offset="100%" stop-color="#e07f2e"/></radialGradient></defs>
-<polygon points="28,40 20,8 50,24" fill="#e07f2e"/><polygon points="30,33 26,16 44,25" fill="#f9cfa4"/>
-<polygon points="92,40 100,8 70,24" fill="#e07f2e"/><polygon points="90,33 94,16 76,25" fill="#f9cfa4"/>
-<circle cx="60" cy="64" r="36" fill="url(#grGAT)"/>
-<path d="M47 31 q4 9 0 15 M60 28 q3 10 0 17 M73 31 q-4 9 0 15" stroke="#c96a22" stroke-width="4" fill="none" stroke-linecap="round"/>
-<circle cx="45" cy="60" r="5.2" fill="#2e4a1f"/><circle cx="75" cy="60" r="5.2" fill="#2e4a1f"/>
-<circle cx="46.8" cy="58.2" r="1.7" fill="#fff"/><circle cx="76.8" cy="58.2" r="1.7" fill="#fff"/>
-<polygon points="55,66 65,66 60,72" fill="#e2708a"/>
-<path d="M60 72 q0 6 -7 7 M60 72 q0 6 7 7" stroke="#8a4a20" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-<path d="M30 66 l-16 -2 M30 72 l-16 2 M90 66 l16 -2 M90 72 l16 2" stroke="#c96a22" stroke-width="2" stroke-linecap="round"/>
-<ellipse cx="38" cy="72" rx="5" ry="3" fill="#f2a6a0" opacity=".5"/><ellipse cx="82" cy="72" rx="5" ry="3" fill="#f2a6a0" opacity=".5"/></svg>`,
-'vaca':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grVAC" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#fdfaf4"/><stop offset="100%" stop-color="#e5dccb"/></radialGradient></defs>
-<ellipse cx="22" cy="48" rx="14" ry="9" fill="#e8e0d2" transform="rotate(-15 22 48)"/>
-<ellipse cx="98" cy="48" rx="14" ry="9" fill="#e8e0d2" transform="rotate(15 98 48)"/>
-<ellipse cx="22" cy="48" rx="7" ry="4" fill="#f2c4cf" transform="rotate(-15 22 48)"/>
-<ellipse cx="98" cy="48" rx="7" ry="4" fill="#f2c4cf" transform="rotate(15 98 48)"/>
-<circle cx="60" cy="58" r="38" fill="url(#grVAC)"/>
-<ellipse cx="40" cy="40" rx="13" ry="10" fill="#57493e" transform="rotate(-18 40 40)"/>
-<ellipse cx="82" cy="34" rx="10" ry="8" fill="#57493e" transform="rotate(14 82 34)"/>
-<circle cx="44" cy="56" r="5" fill="#3a2f26"/><circle cx="76" cy="56" r="5" fill="#3a2f26"/>
-<circle cx="45.6" cy="54.4" r="1.6" fill="#fff"/><circle cx="77.6" cy="54.4" r="1.6" fill="#fff"/>
-<ellipse cx="60" cy="80" rx="23" ry="15" fill="#f2b3c2"/>
-<ellipse cx="52" cy="79" rx="3" ry="4.5" fill="#c9708a"/><ellipse cx="68" cy="79" rx="3" ry="4.5" fill="#c9708a"/>
-<path d="M52 89 q8 5 16 0" stroke="#c9708a" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>`,
-'porco':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grPOR" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#f9c3d0"/><stop offset="100%" stop-color="#ec94aa"/></radialGradient></defs>
-<polygon points="32,28 22,6 48,16" fill="#e795a8"/><polygon points="88,28 98,6 72,16" fill="#e795a8"/>
-<polygon points="33,24 28,12 43,17" fill="#d4708c"/><polygon points="87,24 92,12 77,17" fill="#d4708c"/>
-<circle cx="60" cy="62" r="38" fill="url(#grPOR)"/>
-<circle cx="44" cy="54" r="5" fill="#4a2c33"/><circle cx="76" cy="54" r="5" fill="#4a2c33"/>
-<circle cx="45.6" cy="52.4" r="1.6" fill="#fff"/><circle cx="77.6" cy="52.4" r="1.6" fill="#fff"/>
-<ellipse cx="60" cy="74" rx="17" ry="13" fill="#e5839d"/>
-<ellipse cx="54" cy="74" rx="2.8" ry="4.5" fill="#a34d61"/><ellipse cx="66" cy="74" rx="2.8" ry="4.5" fill="#a34d61"/>
-<ellipse cx="34" cy="66" rx="5.5" ry="3.2" fill="#e06a86" opacity=".5"/><ellipse cx="86" cy="66" rx="5.5" ry="3.2" fill="#e06a86" opacity=".5"/>
-<path d="M48 92 q12 6 24 0" stroke="#c96a84" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>`,
-'sapo':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grSAP" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#9cd96e"/><stop offset="100%" stop-color="#63a83e"/></radialGradient></defs>
-<circle cx="36" cy="28" r="15" fill="#7cc24f"/><circle cx="84" cy="28" r="15" fill="#7cc24f"/>
-<circle cx="36" cy="28" r="9" fill="#fff"/><circle cx="84" cy="28" r="9" fill="#fff"/>
-<circle cx="36" cy="29" r="4.5" fill="#28421b"/><circle cx="84" cy="29" r="4.5" fill="#28421b"/>
-<circle cx="37.5" cy="27.5" r="1.5" fill="#fff"/><circle cx="85.5" cy="27.5" r="1.5" fill="#fff"/>
-<ellipse cx="60" cy="70" rx="44" ry="34" fill="url(#grSAP)"/>
-<circle cx="52" cy="52" r="1.8" fill="#28421b"/><circle cx="68" cy="52" r="1.8" fill="#28421b"/>
-<path d="M34 68 q26 18 52 0" stroke="#28421b" stroke-width="3" fill="none" stroke-linecap="round"/>
-<ellipse cx="30" cy="76" rx="6" ry="3.5" fill="#e88a7a" opacity=".5"/><ellipse cx="90" cy="76" rx="6" ry="3.5" fill="#e88a7a" opacity=".5"/></svg>`,
-'leão':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grLEA" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#f6c983"/><stop offset="100%" stop-color="#e09a4a"/></radialGradient></defs>
+'cachorro':`<svg viewBox="0 0 160 120"><defs><radialGradient id="gDC" cx="45%" cy="35%" r="80%"><stop offset="0%" stop-color="#f0c179"/><stop offset="100%" stop-color="#cf9450"/></radialGradient></defs>
+<path d="M128 66 q16 -6 18 -20 q4 18 -12 26z" fill="#b97f42"/>
+<ellipse cx="96" cy="76" rx="34" ry="22" fill="url(#gDC)"/>
+<rect x="70" y="86" width="10" height="26" rx="5" fill="#cf9450"/><rect x="86" y="90" width="10" height="24" rx="5" fill="#c08a4a"/>
+<rect x="106" y="90" width="10" height="24" rx="5" fill="#c08a4a"/><rect x="118" y="86" width="10" height="26" rx="5" fill="#cf9450"/>
+<ellipse cx="78" cy="80" rx="12" ry="14" fill="#f7e3c2"/>
+<ellipse cx="28" cy="42" rx="9" ry="16" fill="#a5683a" transform="rotate(18 28 42)"/>
+<ellipse cx="68" cy="42" rx="9" ry="16" fill="#a5683a" transform="rotate(-18 68 42)"/>
+<circle cx="48" cy="48" r="26" fill="url(#gDC)"/>
+<ellipse cx="48" cy="58" rx="13" ry="10" fill="#f7e3c2"/>
+<ellipse cx="48" cy="53" rx="5" ry="4" fill="#4a3325"/>
+<path d="M48 57 q0 5 -6 6 M48 57 q0 5 6 6" stroke="#4a3325" stroke-width="2" fill="none" stroke-linecap="round"/>
+<path d="M44 66 q4 4 8 0" stroke="#d97f7f" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+<circle cx="38" cy="44" r="4" fill="#33241a"/><circle cx="58" cy="44" r="4" fill="#33241a"/>
+<circle cx="39.3" cy="42.8" r="1.3" fill="#fff"/><circle cx="59.3" cy="42.8" r="1.3" fill="#fff"/>
+<ellipse cx="32" cy="52" rx="4" ry="2.4" fill="#f2a6a0" opacity=".55"/><ellipse cx="64" cy="52" rx="4" ry="2.4" fill="#f2a6a0" opacity=".55"/></svg>`,
+'gato':`<svg viewBox="0 0 160 120"><defs><radialGradient id="gGT" cx="45%" cy="35%" r="80%"><stop offset="0%" stop-color="#f6b26a"/><stop offset="100%" stop-color="#e08030"/></radialGradient></defs>
+<path d="M126 74 q18 -2 20 -22" stroke="#e08030" stroke-width="9" fill="none" stroke-linecap="round"/>
+<path d="M141 62 q4 -5 5 -10" stroke="#c96a22" stroke-width="9" fill="none" stroke-linecap="round"/>
+<ellipse cx="96" cy="78" rx="32" ry="20" fill="url(#gGT)"/>
+<path d="M92 60 q3 8 0 12 M104 60 q-3 8 0 12" stroke="#c96a22" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+<rect x="72" y="88" width="9" height="24" rx="4.5" fill="#e08030"/><rect x="86" y="92" width="9" height="22" rx="4.5" fill="#d3742a"/>
+<rect x="104" y="92" width="9" height="22" rx="4.5" fill="#d3742a"/><rect x="116" y="88" width="9" height="24" rx="4.5" fill="#e08030"/>
+<polygon points="30,32 24,10 44,22" fill="#e08030"/><polygon points="31,27 28,15 40,22" fill="#f9cfa4"/>
+<polygon points="66,32 72,10 52,22" fill="#e08030"/><polygon points="65,27 68,15 56,22" fill="#f9cfa4"/>
+<circle cx="48" cy="46" r="24" fill="url(#gGT)"/>
+<path d="M40 26 q2 6 0 9 M48 24 q2 7 0 10 M56 26 q-2 6 0 9" stroke="#c96a22" stroke-width="3" fill="none" stroke-linecap="round"/>
+<circle cx="39" cy="44" r="4" fill="#2e4a1f"/><circle cx="57" cy="44" r="4" fill="#2e4a1f"/>
+<circle cx="40.3" cy="42.8" r="1.3" fill="#fff"/><circle cx="58.3" cy="42.8" r="1.3" fill="#fff"/>
+<polygon points="45,51 51,51 48,55" fill="#e2708a"/>
+<path d="M48 55 q0 4 -5 5 M48 55 q0 4 5 5" stroke="#8a4a20" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<path d="M28 48 l-12 -2 M28 53 l-12 2 M68 48 l12 -2 M68 53 l12 2" stroke="#c96a22" stroke-width="1.6" stroke-linecap="round"/>
+<ellipse cx="33" cy="52" rx="3.6" ry="2.2" fill="#f2a6a0" opacity=".5"/><ellipse cx="63" cy="52" rx="3.6" ry="2.2" fill="#f2a6a0" opacity=".5"/></svg>`,
+'vaca':`<svg viewBox="0 0 160 120"><defs><radialGradient id="gVC" cx="45%" cy="35%" r="80%"><stop offset="0%" stop-color="#fdfaf4"/><stop offset="100%" stop-color="#e7ddcb"/></radialGradient></defs>
+<path d="M128 62 q10 10 6 26" stroke="#d8ccb4" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="134" cy="90" r="5" fill="#57493e"/>
+<ellipse cx="96" cy="72" rx="34" ry="23" fill="url(#gVC)"/>
+<ellipse cx="104" cy="62" rx="12" ry="9" fill="#57493e" transform="rotate(-12 104 62)"/>
+<ellipse cx="84" cy="82" rx="9" ry="7" fill="#57493e"/>
+<ellipse cx="112" cy="90" rx="8" ry="6" fill="#f2b3c2"/>
+<rect x="70" y="86" width="10" height="26" rx="5" fill="#e7ddcb"/><rect x="86" y="90" width="10" height="24" rx="5" fill="#d8ccb4"/>
+<rect x="104" y="90" width="10" height="24" rx="5" fill="#d8ccb4"/><rect x="118" y="86" width="10" height="26" rx="5" fill="#e7ddcb"/>
+<rect x="70" y="106" width="10" height="6" rx="3" fill="#57493e"/><rect x="86" y="108" width="10" height="6" rx="3" fill="#57493e"/>
+<rect x="104" y="108" width="10" height="6" rx="3" fill="#57493e"/><rect x="118" y="106" width="10" height="6" rx="3" fill="#57493e"/>
+<path d="M30 26 q-6 -8 2 -12 q6 4 4 10z" fill="#e8d8b0"/><path d="M62 26 q6 -8 -2 -12 q-6 4 -4 10z" fill="#e8d8b0"/>
+<ellipse cx="22" cy="40" rx="9" ry="5.5" fill="#e7ddcb" transform="rotate(-15 22 40)"/>
+<ellipse cx="70" cy="40" rx="9" ry="5.5" fill="#e7ddcb" transform="rotate(15 70 40)"/>
+<circle cx="46" cy="46" r="24" fill="url(#gVC)"/>
+<ellipse cx="36" cy="34" rx="10" ry="8" fill="#57493e" transform="rotate(-15 36 34)"/>
+<ellipse cx="46" cy="58" rx="15" ry="10" fill="#f2b3c2"/>
+<ellipse cx="40" cy="57" rx="2.4" ry="3.4" fill="#c9708a"/><ellipse cx="52" cy="57" rx="2.4" ry="3.4" fill="#c9708a"/>
+<path d="M41 64 q5 3 10 0" stroke="#c9708a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<circle cx="37" cy="44" r="4" fill="#3a2f26"/><circle cx="55" cy="44" r="4" fill="#3a2f26"/>
+<circle cx="38.3" cy="42.8" r="1.3" fill="#fff"/><circle cx="56.3" cy="42.8" r="1.3" fill="#fff"/></svg>`,
+'porco':`<svg viewBox="0 0 160 120"><defs><radialGradient id="gPR" cx="45%" cy="35%" r="80%"><stop offset="0%" stop-color="#f9c3d0"/><stop offset="100%" stop-color="#ec94aa"/></radialGradient></defs>
+<path d="M128 62 q10 -2 8 -10 q-2 -6 -8 -4 q-4 2 -2 6" stroke="#e06a86" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+<ellipse cx="96" cy="74" rx="33" ry="22" fill="url(#gPR)"/>
+<rect x="72" y="88" width="10" height="24" rx="5" fill="#ec94aa"/><rect x="88" y="92" width="10" height="22" rx="5" fill="#e0809b"/>
+<rect x="106" y="92" width="10" height="22" rx="5" fill="#e0809b"/><rect x="118" y="88" width="10" height="24" rx="5" fill="#ec94aa"/>
+<rect x="72" y="106" width="10" height="6" rx="3" fill="#a34d61"/><rect x="88" y="108" width="10" height="6" rx="3" fill="#a34d61"/>
+<rect x="106" y="108" width="10" height="6" rx="3" fill="#a34d61"/><rect x="118" y="106" width="10" height="6" rx="3" fill="#a34d61"/>
+<polygon points="32,34 26,14 46,26" fill="#e795a8"/><polygon points="64,34 70,14 50,26" fill="#e795a8"/>
+<polygon points="33,29 30,19 41,25" fill="#d4708c"/><polygon points="63,29 66,19 55,25" fill="#d4708c"/>
+<circle cx="48" cy="50" r="24" fill="url(#gPR)"/>
+<circle cx="39" cy="46" r="4" fill="#4a2c33"/><circle cx="57" cy="46" r="4" fill="#4a2c33"/>
+<circle cx="40.3" cy="44.8" r="1.3" fill="#fff"/><circle cx="58.3" cy="44.8" r="1.3" fill="#fff"/>
+<ellipse cx="48" cy="58" rx="11" ry="8" fill="#e5839d"/>
+<ellipse cx="44" cy="58" rx="2" ry="3" fill="#a34d61"/><ellipse cx="52" cy="58" rx="2" ry="3" fill="#a34d61"/>
+<path d="M43 69 q5 3 10 0" stroke="#c96a84" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<ellipse cx="31" cy="54" rx="4" ry="2.4" fill="#e06a86" opacity=".5"/><ellipse cx="65" cy="54" rx="4" ry="2.4" fill="#e06a86" opacity=".5"/></svg>`,
+'sapo':`<svg viewBox="0 0 160 120"><defs><radialGradient id="gSP" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#9cd96e"/><stop offset="100%" stop-color="#63a83e"/></radialGradient></defs>
+<ellipse cx="50" cy="92" rx="16" ry="10" fill="#63a83e"/><ellipse cx="110" cy="92" rx="16" ry="10" fill="#63a83e"/>
+<ellipse cx="58" cy="104" rx="10" ry="5" fill="#7cc24f"/><ellipse cx="102" cy="104" rx="10" ry="5" fill="#7cc24f"/>
+<ellipse cx="80" cy="74" rx="36" ry="28" fill="url(#gSP)"/>
+<ellipse cx="80" cy="86" rx="22" ry="13" fill="#dff2c8"/>
+<circle cx="62" cy="40" r="12" fill="#7cc24f"/><circle cx="98" cy="40" r="12" fill="#7cc24f"/>
+<circle cx="62" cy="40" r="7.5" fill="#fff"/><circle cx="98" cy="40" r="7.5" fill="#fff"/>
+<circle cx="62" cy="41" r="3.8" fill="#28421b"/><circle cx="98" cy="41" r="3.8" fill="#28421b"/>
+<circle cx="63.2" cy="39.8" r="1.2" fill="#fff"/><circle cx="99.2" cy="39.8" r="1.2" fill="#fff"/>
+<circle cx="74" cy="58" r="1.6" fill="#28421b"/><circle cx="86" cy="58" r="1.6" fill="#28421b"/>
+<path d="M62 66 q18 12 36 0" stroke="#28421b" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+<ellipse cx="54" cy="68" rx="5" ry="3" fill="#e88a7a" opacity=".5"/><ellipse cx="106" cy="68" rx="5" ry="3" fill="#e88a7a" opacity=".5"/>
+<ellipse cx="70" cy="102" rx="8" ry="4.5" fill="#7cc24f"/><ellipse cx="90" cy="102" rx="8" ry="4.5" fill="#7cc24f"/></svg>`,
+'leão':`<svg viewBox="0 0 160 120"><defs><radialGradient id="gLN" cx="45%" cy="35%" r="80%"><stop offset="0%" stop-color="#f0b465"/><stop offset="100%" stop-color="#dd9a44"/></radialGradient></defs>
+<path d="M128 70 q14 -4 16 -18" stroke="#dd9a44" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="145" cy="50" r="6" fill="#c9752e"/>
+<ellipse cx="98" cy="78" rx="32" ry="20" fill="url(#gLN)"/>
+<rect x="74" y="88" width="10" height="24" rx="5" fill="#dd9a44"/><rect x="90" y="92" width="10" height="22" rx="5" fill="#cf8c3a"/>
+<rect x="106" y="92" width="10" height="22" rx="5" fill="#cf8c3a"/><rect x="118" y="88" width="10" height="24" rx="5" fill="#dd9a44"/>
 <g fill="#c9752e">
-<circle cx="60" cy="14" r="13"/><circle cx="87" cy="23" r="13"/><circle cx="104" cy="46" r="13"/><circle cx="104" cy="74" r="13"/>
-<circle cx="87" cy="97" r="13"/><circle cx="60" cy="106" r="13"/><circle cx="33" cy="97" r="13"/><circle cx="16" cy="74" r="13"/>
-<circle cx="16" cy="46" r="13"/><circle cx="33" cy="23" r="13"/><circle cx="60" cy="60" r="46"/>
-</g>
-<circle cx="60" cy="62" r="34" fill="url(#grLEA)"/>
-<ellipse cx="60" cy="76" rx="16" ry="12" fill="#f9e6c4"/>
-<circle cx="46" cy="58" r="5" fill="#3a2a1a"/><circle cx="74" cy="58" r="5" fill="#3a2a1a"/>
-<circle cx="47.6" cy="56.4" r="1.6" fill="#fff"/><circle cx="75.6" cy="56.4" r="1.6" fill="#fff"/>
-<polygon points="54,70 66,70 60,78" fill="#6b4226"/>
-<path d="M60 78 q0 6 -7 7 M60 78 q0 6 7 7" stroke="#6b4226" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-<ellipse cx="38" cy="70" rx="5" ry="3" fill="#f2a06a" opacity=".6"/><ellipse cx="82" cy="70" rx="5" ry="3" fill="#f2a06a" opacity=".6"/></svg>`,
-'cavalo':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grCAV" cx="50%" cy="35%" r="80%"><stop offset="0%" stop-color="#c08a55"/><stop offset="100%" stop-color="#8f5c33"/></radialGradient></defs>
-<polygon points="38,26 30,4 50,16" fill="#8f5c33"/><polygon points="82,26 90,4 70,16" fill="#8f5c33"/>
-<polygon points="39,22 35,9 47,16" fill="#5c3a1e"/><polygon points="81,22 85,9 73,16" fill="#5c3a1e"/>
-<ellipse cx="60" cy="62" rx="32" ry="42" fill="url(#grCAV)"/>
-<path d="M44 22 q16 -10 32 0 q-6 8 -16 7 q-10 1 -16 -7z" fill="#5c3a1e"/>
-<path d="M46 26 q-8 18 -4 34" stroke="#5c3a1e" stroke-width="7" fill="none" stroke-linecap="round"/>
-<ellipse cx="60" cy="88" rx="20" ry="14" fill="#e3c39c"/>
-<ellipse cx="53" cy="86" rx="2.6" ry="3.6" fill="#7a5232"/><ellipse cx="67" cy="86" rx="2.6" ry="3.6" fill="#7a5232"/>
-<path d="M53 96 q7 5 14 0" stroke="#7a5232" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-<circle cx="44" cy="56" r="5.5" fill="#2e2016"/><circle cx="76" cy="56" r="5.5" fill="#2e2016"/>
-<circle cx="45.8" cy="54.2" r="1.8" fill="#fff"/><circle cx="77.8" cy="54.2" r="1.8" fill="#fff"/></svg>`,
-'pato':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grPAT" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#ffe27a"/><stop offset="100%" stop-color="#f5b81e"/></radialGradient></defs>
-<path d="M60 16 q6 -8 12 -4 q-4 6 -8 8" fill="#f5b81e"/>
-<circle cx="60" cy="60" r="38" fill="url(#grPAT)"/>
-<circle cx="44" cy="52" r="5.5" fill="#3a2f14"/><circle cx="76" cy="52" r="5.5" fill="#3a2f14"/>
-<circle cx="45.8" cy="50.2" r="1.8" fill="#fff"/><circle cx="77.8" cy="50.2" r="1.8" fill="#fff"/>
-<ellipse cx="60" cy="74" rx="19" ry="11" fill="#f5941e"/>
-<path d="M44 72 q16 6 32 0" stroke="#c96f10" stroke-width="2" fill="none" stroke-linecap="round"/>
-<circle cx="54" cy="69" r="1.5" fill="#c96f10"/><circle cx="66" cy="69" r="1.5" fill="#c96f10"/>
-<ellipse cx="35" cy="64" rx="5.5" ry="3.2" fill="#f2a06a" opacity=".55"/><ellipse cx="85" cy="64" rx="5.5" ry="3.2" fill="#f2a06a" opacity=".55"/></svg>`,
-'ovelha':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grOVE" cx="50%" cy="40%" r="75%"><stop offset="0%" stop-color="#d9b48f"/><stop offset="100%" stop-color="#bd8f63"/></radialGradient></defs>
+<circle cx="72" cy="48" r="10"/><circle cx="65" cy="65" r="10"/><circle cx="48" cy="72" r="10"/><circle cx="31" cy="65" r="10"/>
+<circle cx="24" cy="48" r="10"/><circle cx="31" cy="31" r="10"/><circle cx="48" cy="24" r="10"/><circle cx="65" cy="31" r="10"/>
+<circle cx="48" cy="48" r="26"/></g>
+<circle cx="48" cy="48" r="20" fill="url(#gLN)"/>
+<ellipse cx="48" cy="56" rx="10" ry="7.5" fill="#f9e6c4"/>
+<polygon points="44,52 52,52 48,57" fill="#6b4226"/>
+<path d="M48 57 q0 4 -5 5 M48 57 q0 4 5 5" stroke="#6b4226" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<circle cx="40" cy="44" r="3.6" fill="#3a2a1a"/><circle cx="56" cy="44" r="3.6" fill="#3a2a1a"/>
+<circle cx="41.2" cy="42.8" r="1.2" fill="#fff"/><circle cx="57.2" cy="42.8" r="1.2" fill="#fff"/>
+<ellipse cx="34" cy="52" rx="3.6" ry="2.2" fill="#f2a06a" opacity=".6"/><ellipse cx="62" cy="52" rx="3.6" ry="2.2" fill="#f2a06a" opacity=".6"/></svg>`,
+'cavalo':`<svg viewBox="0 0 160 120"><defs><radialGradient id="gCV" cx="45%" cy="35%" r="80%"><stop offset="0%" stop-color="#c08a55"/><stop offset="100%" stop-color="#8f5c33"/></radialGradient></defs>
+<path d="M130 62 q10 14 4 30" stroke="#5c3a1e" stroke-width="7" fill="none" stroke-linecap="round"/>
+<ellipse cx="98" cy="72" rx="32" ry="21" fill="url(#gCV)"/>
+<rect x="74" y="84" width="10" height="28" rx="5" fill="#8f5c33"/><rect x="90" y="88" width="10" height="26" rx="5" fill="#7d4f2b"/>
+<rect x="106" y="88" width="10" height="26" rx="5" fill="#7d4f2b"/><rect x="118" y="84" width="10" height="28" rx="5" fill="#8f5c33"/>
+<rect x="74" y="106" width="10" height="6" rx="3" fill="#4a2f18"/><rect x="90" y="108" width="10" height="6" rx="3" fill="#4a2f18"/>
+<rect x="106" y="108" width="10" height="6" rx="3" fill="#4a2f18"/><rect x="118" y="106" width="10" height="6" rx="3" fill="#4a2f18"/>
+<ellipse cx="76" cy="50" rx="12" ry="20" fill="url(#gCV)" transform="rotate(20 76 50)"/>
+<path d="M84 32 q-10 10 -8 26" stroke="#5c3a1e" stroke-width="5" fill="none" stroke-linecap="round"/>
+<polygon points="64,16 62,4 72,12" fill="#8f5c33"/><polygon points="72,16 74,4 80,14" fill="#8f5c33"/>
+<ellipse cx="62" cy="30" rx="16" ry="12" fill="url(#gCV)" transform="rotate(-15 62 30)"/>
+<path d="M66 14 q4 -4 8 -2" stroke="#5c3a1e" stroke-width="4" fill="none" stroke-linecap="round"/>
+<ellipse cx="50" cy="35" rx="8" ry="6.5" fill="#e3c39c"/>
+<circle cx="47" cy="34" r="1.6" fill="#7a5232"/>
+<path d="M46 39 q4 2 7 0" stroke="#7a5232" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+<circle cx="64" cy="28" r="3.4" fill="#2e2016"/><circle cx="65.2" cy="26.8" r="1.1" fill="#fff"/>
+<ellipse cx="56" cy="42" rx="3.4" ry="2" fill="#e8a08a" opacity=".5"/></svg>`,
+'pato':`<svg viewBox="0 0 160 120"><defs><radialGradient id="gPT" cx="45%" cy="35%" r="80%"><stop offset="0%" stop-color="#fffdf4"/><stop offset="100%" stop-color="#efe6cf"/></radialGradient></defs>
+<path d="M124 66 q12 -6 14 -16 q4 12 -8 20z" fill="#e3d7ba"/>
+<ellipse cx="94" cy="74" rx="32" ry="21" fill="url(#gPT)"/>
+<ellipse cx="98" cy="74" rx="16" ry="11" fill="#e3d7ba" transform="rotate(-15 98 74)"/>
+<path d="M86 94 l-3 12 h11z" fill="#f5941e"/><path d="M104 94 l-3 12 h11z" fill="#f5941e"/>
+<path d="M58 24 q2 -6 8 -6 q-2 6 -6 7" fill="#efe6cf"/>
+<circle cx="56" cy="42" r="18" fill="url(#gPT)"/>
+<ellipse cx="40" cy="46" rx="10" ry="6" fill="#f5941e"/>
+<path d="M32 46 q8 4 16 2" stroke="#c96f10" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+<circle cx="56" cy="38" r="3.4" fill="#3a2f14"/><circle cx="57.2" cy="36.8" r="1.1" fill="#fff"/>
+<ellipse cx="62" cy="50" rx="4" ry="2.4" fill="#f2a06a" opacity=".55"/></svg>`,
+'ovelha':`<svg viewBox="0 0 160 120"><defs><radialGradient id="gOV" cx="50%" cy="40%" r="80%"><stop offset="0%" stop-color="#d9b48f"/><stop offset="100%" stop-color="#bd8f63"/></radialGradient></defs>
 <g fill="#fbf6ec">
-<circle cx="30" cy="34" r="15"/><circle cx="60" cy="24" r="16"/><circle cx="90" cy="34" r="15"/>
-<circle cx="20" cy="60" r="14"/><circle cx="100" cy="60" r="14"/>
-<circle cx="28" cy="86" r="14"/><circle cx="92" cy="86" r="14"/><circle cx="60" cy="96" r="15"/><circle cx="60" cy="60" r="40"/>
-</g>
-<ellipse cx="26" cy="58" rx="11" ry="7" fill="#c99b72" transform="rotate(-18 26 58)"/>
-<ellipse cx="94" cy="58" rx="11" ry="7" fill="#c99b72" transform="rotate(18 94 58)"/>
-<ellipse cx="60" cy="64" rx="26" ry="28" fill="url(#grOVE)"/>
-<circle cx="48" cy="60" r="4.8" fill="#3a2a1c"/><circle cx="72" cy="60" r="4.8" fill="#3a2a1c"/>
-<circle cx="49.6" cy="58.4" r="1.5" fill="#fff"/><circle cx="73.6" cy="58.4" r="1.5" fill="#fff"/>
-<path d="M54 78 q6 5 12 0" stroke="#7a5238" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-<ellipse cx="42" cy="72" rx="5" ry="3" fill="#e89a8a" opacity=".5"/><ellipse cx="78" cy="72" rx="5" ry="3" fill="#e89a8a" opacity=".5"/></svg>`,
-'galinha':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grGAL" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#fffdf6"/><stop offset="100%" stop-color="#efe2c8"/></radialGradient></defs>
-<circle cx="48" cy="16" r="8" fill="#e04040"/><circle cx="60" cy="10" r="9" fill="#e04040"/><circle cx="72" cy="16" r="8" fill="#e04040"/>
-<circle cx="60" cy="62" r="38" fill="url(#grGAL)"/>
-<circle cx="44" cy="56" r="5" fill="#3a2f26"/><circle cx="76" cy="56" r="5" fill="#3a2f26"/>
-<circle cx="45.6" cy="54.4" r="1.6" fill="#fff"/><circle cx="77.6" cy="54.4" r="1.6" fill="#fff"/>
-<polygon points="60,62 71,71 60,82 49,71" fill="#f5a01e"/>
-<path d="M49 71 h22" stroke="#c97a10" stroke-width="1.6"/>
-<ellipse cx="60" cy="90" rx="6" ry="6" fill="#e04040"/>
-<ellipse cx="37" cy="68" rx="5" ry="3" fill="#f2a6a0" opacity=".6"/><ellipse cx="83" cy="68" rx="5" ry="3" fill="#f2a6a0" opacity=".6"/></svg>`,
-'elefante':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grELE" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#aebdd0"/><stop offset="100%" stop-color="#8595ab"/></radialGradient></defs>
-<ellipse cx="21" cy="60" rx="19" ry="27" fill="#8595ab"/><ellipse cx="99" cy="60" rx="19" ry="27" fill="#8595ab"/>
-<ellipse cx="21" cy="60" rx="11" ry="18" fill="#c9d4e2"/><ellipse cx="99" cy="60" rx="11" ry="18" fill="#c9d4e2"/>
-<circle cx="60" cy="56" r="35" fill="url(#grELE)"/>
-<path d="M60 74 q-1 16 -12 24 q-5 4 -10 2" stroke="#93a3b8" stroke-width="13" fill="none" stroke-linecap="round"/>
-<circle cx="45" cy="52" r="5" fill="#2e3440"/><circle cx="75" cy="52" r="5" fill="#2e3440"/>
-<circle cx="46.6" cy="50.4" r="1.6" fill="#fff"/><circle cx="76.6" cy="50.4" r="1.6" fill="#fff"/>
-<ellipse cx="36" cy="64" rx="5" ry="3" fill="#e8a0a0" opacity=".5"/><ellipse cx="84" cy="64" rx="5" ry="3" fill="#e8a0a0" opacity=".5"/></svg>`,
-'macaco':`<svg viewBox="0 0 120 120"><defs><radialGradient id="grMAC" cx="50%" cy="38%" r="75%"><stop offset="0%" stop-color="#b07a4e"/><stop offset="100%" stop-color="#8a5a34"/></radialGradient></defs>
-<circle cx="18" cy="56" r="15" fill="#8a5a34"/><circle cx="102" cy="56" r="15" fill="#8a5a34"/>
-<circle cx="18" cy="56" r="8" fill="#eecfa8"/><circle cx="102" cy="56" r="8" fill="#eecfa8"/>
-<circle cx="60" cy="58" r="36" fill="url(#grMAC)"/>
-<path d="M60 22 q4 -8 12 -6 q-6 8 -10 9" fill="#8a5a34"/>
-<ellipse cx="60" cy="52" rx="25" ry="15" fill="#eecfa8"/>
-<ellipse cx="60" cy="70" rx="20" ry="15" fill="#eecfa8"/>
-<circle cx="48" cy="52" r="4.8" fill="#33241a"/><circle cx="72" cy="52" r="4.8" fill="#33241a"/>
-<circle cx="49.6" cy="50.4" r="1.5" fill="#fff"/><circle cx="73.6" cy="50.4" r="1.5" fill="#fff"/>
-<circle cx="55" cy="66" r="1.8" fill="#6b4a2e"/><circle cx="65" cy="66" r="1.8" fill="#6b4a2e"/>
-<path d="M52 74 q8 7 16 0" stroke="#6b4a2e" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-<ellipse cx="40" cy="62" rx="4.5" ry="3" fill="#e89a8a" opacity=".45"/><ellipse cx="80" cy="62" rx="4.5" ry="3" fill="#e89a8a" opacity=".45"/></svg>`};
+<circle cx="80" cy="70" r="26"/><circle cx="104" cy="64" r="18"/><circle cx="116" cy="78" r="15"/>
+<circle cx="104" cy="90" r="15"/><circle cx="80" cy="94" r="16"/><circle cx="58" cy="90" r="14"/><circle cx="56" cy="64" r="16"/></g>
+<rect x="70" y="98" width="8" height="16" rx="4" fill="#8a6a4c"/><rect x="96" y="98" width="8" height="16" rx="4" fill="#8a6a4c"/>
+<ellipse cx="26" cy="50" rx="9" ry="5" fill="#bd8f63" transform="rotate(-20 26 50)"/>
+<ellipse cx="62" cy="50" rx="9" ry="5" fill="#bd8f63" transform="rotate(20 62 50)"/>
+<ellipse cx="44" cy="52" rx="17" ry="19" fill="url(#gOV)"/>
+<g fill="#fbf6ec"><circle cx="36" cy="36" r="8"/><circle cx="46" cy="33" r="9"/><circle cx="55" cy="37" r="7"/></g>
+<circle cx="38" cy="52" r="3.4" fill="#3a2a1c"/><circle cx="50" cy="52" r="3.4" fill="#3a2a1c"/>
+<circle cx="39.2" cy="50.8" r="1.1" fill="#fff"/><circle cx="51.2" cy="50.8" r="1.1" fill="#fff"/>
+<ellipse cx="44" cy="60" rx="4" ry="3" fill="#a8734d" opacity=".5"/>
+<path d="M40 66 q4 3 8 0" stroke="#7a5238" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+<ellipse cx="33" cy="60" rx="3.4" ry="2" fill="#e89a8a" opacity=".5"/><ellipse cx="55" cy="60" rx="3.4" ry="2" fill="#e89a8a" opacity=".5"/></svg>`,
+'galinha':`<svg viewBox="0 0 160 120"><defs><radialGradient id="gGL" cx="45%" cy="35%" r="80%"><stop offset="0%" stop-color="#fffdf6"/><stop offset="100%" stop-color="#efe2c8"/></radialGradient></defs>
+<path d="M118 60 q16 -14 24 -10 q-4 12 -18 16z" fill="#e8d8b0"/>
+<path d="M118 70 q18 -6 26 0 q-8 10 -22 8z" fill="#e0cf9f"/>
+<ellipse cx="92" cy="76" rx="30" ry="21" fill="url(#gGL)"/>
+<ellipse cx="96" cy="78" rx="14" ry="10" fill="#e8d8b0" transform="rotate(-12 96 78)"/>
+<path d="M86 96 v10 m0 0 h-6 m6 0 h6" stroke="#f5a01e" stroke-width="3" stroke-linecap="round" fill="none"/>
+<path d="M102 96 v10 m0 0 h-6 m6 0 h6" stroke="#f5a01e" stroke-width="3" stroke-linecap="round" fill="none"/>
+<circle cx="48" cy="26" r="5" fill="#e04040"/><circle cx="56" cy="23" r="6" fill="#e04040"/><circle cx="64" cy="26" r="5" fill="#e04040"/>
+<circle cx="56" cy="44" r="17" fill="url(#gGL)"/>
+<polygon points="40,44 30,48 40,52" fill="#f5a01e"/>
+<ellipse cx="44" cy="57" rx="4" ry="5" fill="#e04040"/>
+<circle cx="54" cy="42" r="3.2" fill="#3a2f26"/><circle cx="55.2" cy="40.8" r="1.1" fill="#fff"/>
+<ellipse cx="62" cy="50" rx="3.6" ry="2.2" fill="#f2a6a0" opacity=".6"/></svg>`,
+'elefante':`<svg viewBox="0 0 160 120"><defs><radialGradient id="gEL" cx="45%" cy="35%" r="80%"><stop offset="0%" stop-color="#aebdd0"/><stop offset="100%" stop-color="#8595ab"/></radialGradient></defs>
+<path d="M130 66 q8 10 4 20" stroke="#8595ab" stroke-width="5" fill="none" stroke-linecap="round"/>
+<ellipse cx="98" cy="72" rx="34" ry="24" fill="url(#gEL)"/>
+<rect x="72" y="88" width="12" height="26" rx="6" fill="#8595ab"/><rect x="92" y="92" width="12" height="24" rx="6" fill="#7a8aa0"/>
+<rect x="112" y="92" width="12" height="24" rx="6" fill="#7a8aa0"/><rect x="124" y="88" width="12" height="26" rx="6" fill="#8595ab"/>
+<ellipse cx="68" cy="52" rx="14" ry="18" fill="#7a8aa0"/><ellipse cx="68" cy="52" rx="8" ry="12" fill="#c9d4e2"/>
+<circle cx="52" cy="52" r="24" fill="url(#gEL)"/>
+<path d="M34 60 q-6 16 2 28 q4 6 10 6" stroke="#93a3b8" stroke-width="10" fill="none" stroke-linecap="round"/>
+<path d="M42 70 q-6 6 -12 6" stroke="#f6f2e8" stroke-width="4" fill="none" stroke-linecap="round"/>
+<circle cx="46" cy="46" r="3.6" fill="#2e3440"/><circle cx="47.2" cy="44.8" r="1.2" fill="#fff"/>
+<ellipse cx="38" cy="54" rx="4" ry="2.4" fill="#e8a0a0" opacity=".5"/></svg>`,
+'macaco':`<svg viewBox="0 0 160 120"><defs><radialGradient id="gMC" cx="45%" cy="35%" r="80%"><stop offset="0%" stop-color="#b07a4e"/><stop offset="100%" stop-color="#8a5a34"/></radialGradient></defs>
+<path d="M126 76 q16 -2 18 -18 q1 -8 -6 -10" stroke="#8a5a34" stroke-width="5" fill="none" stroke-linecap="round"/>
+<ellipse cx="96" cy="76" rx="28" ry="20" fill="url(#gMC)"/>
+<ellipse cx="96" cy="80" rx="16" ry="12" fill="#eecfa8"/>
+<rect x="78" y="88" width="9" height="24" rx="4.5" fill="#8a5a34"/><rect x="106" y="88" width="9" height="24" rx="4.5" fill="#8a5a34"/>
+<path d="M76 66 q-10 8 -8 20" stroke="#8a5a34" stroke-width="8" fill="none" stroke-linecap="round"/>
+<path d="M116 66 q10 8 8 20" stroke="#8a5a34" stroke-width="8" fill="none" stroke-linecap="round"/>
+<circle cx="30" cy="44" r="8" fill="#8a5a34"/><circle cx="30" cy="44" r="4.5" fill="#eecfa8"/>
+<circle cx="74" cy="44" r="8" fill="#8a5a34"/><circle cx="74" cy="44" r="4.5" fill="#eecfa8"/>
+<circle cx="52" cy="44" r="21" fill="url(#gMC)"/>
+<path d="M52 22 q2 -5 7 -5 q-2 5 -5 6" fill="#8a5a34"/>
+<ellipse cx="52" cy="40" rx="14" ry="9" fill="#eecfa8"/><ellipse cx="52" cy="52" rx="12" ry="9" fill="#eecfa8"/>
+<circle cx="45" cy="40" r="3.2" fill="#33241a"/><circle cx="59" cy="40" r="3.2" fill="#33241a"/>
+<circle cx="46.1" cy="38.9" r="1.1" fill="#fff"/><circle cx="60.1" cy="38.9" r="1.1" fill="#fff"/>
+<circle cx="48" cy="50" r="1.4" fill="#6b4a2e"/><circle cx="56" cy="50" r="1.4" fill="#6b4a2e"/>
+<path d="M45 56 q7 5 14 0" stroke="#6b4a2e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<ellipse cx="39" cy="48" rx="3" ry="1.8" fill="#e89a8a" opacity=".45"/><ellipse cx="65" cy="48" rx="3" ry="1.8" fill="#e89a8a" opacity=".45"/></svg>`};
 const ART_EMOJI={'🐶':'cachorro','🐱':'gato','🐮':'vaca','🐷':'porco','🐸':'sapo','🦁':'leão','🐴':'cavalo','🦆':'pato','🐑':'ovelha','🐔':'galinha','🐘':'elefante','🐵':'macaco'};
 function imgHTML(e,cls=''){
  const a=ART_EMOJI[e];
@@ -827,7 +882,7 @@ const NUMW={m:['','um','dois','três','quatro','cinco','seis','sete','oito','nov
  f:['','uma','duas','três','quatro','cinco','seis','sete','oito','nove']};
 const PRAISE=['Muito bem!','Parabéns!','Você é demais!','Isso aí!','Que incrível!','Excelente!','Você conseguiu!'];
 const TRYAGAIN=['Tente de novo!','Quase! Vamos tentar outra vez!','Hmm, tenta outra vez!'];
-const BURST_E=['🎉','','🥳','✨','🎊','🏅'];
+const BURST_E=['🎉','🌟','','✨','🎊','🏅'];
 
 /* ===== a trilha (5 níveis) ===== */
 const TRILHA=[
@@ -1077,10 +1132,9 @@ function expTap(b,it,K,disp,seq){
    disp.innerHTML=`<span class="exp-big" style="color:${it.h}">🎵 ${it.n}</span>`;
    VOICE.say(it.n+'!');
  }else{
-   /* ANIMAIS: som toca NA HORA, e a voz fala o nome em seguida */
+   /* ANIMAIS: primeiro a voz fala o nome, DEPOIS toca o som do animal */
    disp.innerHTML=imgHTML(it.e,'art-show')+`<span class="exp-word">${cap(it.n)}</span>`;
-   playAnimal(it.n);
-   VOICE.say(`Esse é ${it.a} ${it.n}!`);
+   VOICE.say(`Esse é ${it.a} ${it.n}!`,()=>playAnimal(it.n));
  }
  if(isNew&&G.expFound.size>=G.expTarget){
    G.locked=true;
@@ -1362,7 +1416,7 @@ function celebrate(){
    Prog.d.unlocked++;Prog.save();newLevel=TRILHA[li+1];}
  SFX.good();setTimeout(()=>SFX.star(),400);confetti(110);
  clearInterval(G.confTimer);G.confTimer=setInterval(()=>confetti(16),1300);
- $('#winEmoji').textContent=pick(['🐰','','🐶','','🦄','','🐵','']);
+ $('#winEmoji').textContent=pick(['🐰','🦁','🐶','🐸','🦄','🐼','🐵','🦉']);
  const row=$('#winStars');row.innerHTML='';
  for(let i=0;i<5;i++){const s=document.createElement('span');s.textContent='⭐';
    s.style.animationDelay=(.25+i*.18)+'s';row.appendChild(s);}
@@ -1402,7 +1456,7 @@ $('#homeBtn').addEventListener('click',goHome);
 $('#muteBtn').addEventListener('click',()=>{
  SFX.ensure();SFX.muted=!SFX.muted;
  if(SFX.muted&&('speechSynthesis'in window))try{speechSynthesis.cancel();}catch(e){}
- $('#muteBtn').textContent=SFX.muted?'🔇':'';
+ $('#muteBtn').textContent=SFX.muted?'🔇':'🔊';
  try{localStorage.setItem('mm_mute',SFX.muted?'1':'0');}catch(e){}
  if(!SFX.muted)SFX.click();});
 
