@@ -1,4 +1,4 @@
-const CACHE = 'mundo-magico-v9';
+const CACHE = 'mundo-magico-v10';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', e => {
@@ -14,42 +14,22 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET') return;
-  const url = new URL(req.url);
 
-  /* arquivos de outros sites (fontes): cache comum */
-  if (url.origin !== location.origin) {
-    e.respondWith(
-      caches.match(req).then(hit =>
-        hit || fetch(req).then(res => {
-          if (res && (res.ok || res.type === 'opaque')) {
-            const copy = res.clone();
-            caches.open(CACHE).then(c => c.put(req, copy));
-          }
-          return res;
-        })
-      )
-    );
-    return;
-  }
-
-  /* PÁGINAS: sempre a versão mais nova quando online (network-first) */
+  /* páginas: sempre busca a versão mais nova quando online */
   if (req.mode === 'navigate') {
     e.respondWith(
       fetch(req).then(res => {
         const copy = res.clone();
         caches.open(CACHE).then(c => c.put(req, copy));
         return res;
-      }).catch(() =>
-        caches.match(req, { ignoreSearch: true })
-          .then(h => h || caches.match('./index.html'))
-      )
+      }).catch(() => caches.match(req).then(h => h || caches.match('./index.html')))
     );
     return;
   }
 
-  /* demais arquivos do app (sons, imagens): cache rápido */
+  /* demais arquivos (sons, fontes): cache rápido com fallback de rede */
   e.respondWith(
-    caches.match(req, { ignoreSearch: true }).then(hit =>
+    caches.match(req).then(hit =>
       hit || fetch(req).then(res => {
         if (res && (res.ok || res.type === 'opaque')) {
           const copy = res.clone();
