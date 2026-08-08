@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#5db9f5">
 <meta name="mobile-web-app-capable" content="yes">
-<title>Mundo Mágico 🌈 Trilha de Alfabetização</title>
+<title>Mundo Mágico 🌈 Do Maternal ao Pré 2</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,7 +43,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 .w-card{text-align:center;padding:6vmin;animation:popIn .7s cubic-bezier(.34,1.56,.64,1)}
 .w-emoji{font-size:22vmin;animation:bob 2.2s ease-in-out infinite}
 .w-title{font-size:11vmin;font-weight:700;color:#fff;text-shadow:0 .6vmin 0 #2b7cb8;margin-top:1vmin}
-.w-sub{font-size:5vmin;font-weight:500;color:#fff;text-shadow:0 .4vmin 0 rgba(43,124,184,.4);margin-top:.5vmin}
+.w-sub{font-size:4.6vmin;font-weight:500;color:#fff;text-shadow:0 .4vmin 0 rgba(43,124,184,.4);margin-top:.5vmin}
 #startBtn{margin-top:6vmin;font-family:inherit;font-size:6.5vmin;font-weight:700;color:#fff;border:none;cursor:pointer;background:linear-gradient(180deg,#ff9838,#ff7043);padding:4vmin 9vmin;border-radius:8vmin;animation:pulseO 1.8s infinite}
 #startBtn:active{transform:scale(.94)}
 .w-hint{margin-top:4vmin;font-size:3.4vmin;color:rgba(255,255,255,.85)}
@@ -60,7 +60,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 .lv-locked{opacity:.6;filter:grayscale(.5)}
 .lv-head{display:flex;align-items:center;gap:3vmin;background:#fff;border-radius:5vmin;padding:2.5vmin 4vmin;box-shadow:0 .8vmin 0 rgba(0,0,0,.08);margin-bottom:3vmin}
 .lv-emoji{font-size:9vmin}
-.lv-tt{flex:1}.lv-tt b{font-size:5.2vmin;display:block}.lv-tt small{font-size:3.6vmin;color:#8a7fb0}
+.lv-tt{flex:1}.lv-tt b{font-size:5.2vmin;display:block}.lv-tt small{font-size:3.4vmin;color:#8a7fb0}
 .lv-mark{font-size:6vmin}
 .lv-grid{display:grid;grid-template-columns:1fr 1fr;gap:3vmin}
 .node{background:#fff;border:none;border-radius:5vmin;padding:3vmin 2vmin;display:flex;flex-direction:column;align-items:center;gap:1vmin;cursor:pointer;box-shadow:0 1vmin 0 rgba(0,0,0,.1);animation:popIn .5s cubic-bezier(.34,1.56,.64,1) backwards;transition:transform .12s}
@@ -106,6 +106,16 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 .wrong{animation:shake .5s ease!important}
 .disabled{opacity:.35;filter:grayscale(.8);pointer-events:none!important}
 
+/* sequência e soma */
+.seq-card{display:flex;gap:2vmin;background:rgba(255,255,255,.9);border-radius:6vmin;padding:3vmin;box-shadow:0 1vmin 0 rgba(0,0,0,.08)}
+.seq-box{width:16vmin;height:16vmin;background:#fff;border-radius:4vmin;display:flex;align-items:center;justify-content:center;font-size:9vmin;font-weight:700;color:var(--ink);box-shadow:0 .8vmin 0 rgba(0,0,0,.08)}
+.seq-box.miss{background:#fff6d9;border:.7vmin dashed #b9a9e8;color:#b9a9e8}
+.seq-box.filled2{border-style:solid;border-color:#5ec66b;color:#5ec66b;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+.sum-card{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2.5vmin;background:rgba(255,255,255,.9);border-radius:6vmin;padding:3vmin 4vmin;box-shadow:0 1vmin 0 rgba(0,0,0,.08)}
+.sum-g{display:flex;gap:1vmin;font-size:8vmin}
+.sum-g span{animation:popIn .4s cubic-bezier(.34,1.56,.64,1) backwards;display:inline-block}
+.sum-op{font-size:9vmin;font-weight:700;color:#ff7043}
+
 /* ilustrações estilo 3D fofo */
 .art{display:inline-block;line-height:0}
 .art svg{width:100%;height:100%;display:block}
@@ -114,7 +124,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 .art-show{width:18vmin;height:18vmin;font-size:13vmin;display:inline-flex;align-items:center;justify-content:center;line-height:1}
 .shadow-e svg{width:19vmin;height:19vmin;display:block}
 
-/* modo conhecer (bebê) */
+/* modo conhecer */
 .exp-show{background:rgba(255,255,255,.92);border-radius:6vmin;min-height:24vmin;width:min(92vmin,760px);display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:2.5vmin;padding:2.5vmin 5vmin;box-shadow:0 1vmin 0 rgba(0,0,0,.08);animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
 .exp-show svg{width:18vmin;height:18vmin}
 .exp-q{font-size:6vmin;font-weight:600;color:#b9a9e8}
@@ -133,8 +143,6 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 .exp-btn svg{width:58%;height:58%}
 .exp-btn.found{background:#fff8e1}
 .exp-btn.found::after{content:'⭐';position:absolute;top:-1.8vmin;right:-1.2vmin;font-size:4.5vmin;animation:starPop .5s cubic-bezier(.34,1.56,.64,1)}
-
-/* ajustes finais de ilustração (precisam vir por último) */
 .exp-btn .art svg{width:100%;height:100%}
 .art-show svg{width:100%;height:100%}
 
@@ -264,7 +272,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
   <div class="w-card">
     <div class="w-emoji">🦁</div>
     <div class="w-title">Mundo Mágico</div>
-    <div class="w-sub">Trilha de Alfabetização</div>
+    <div class="w-sub">Do Maternal 1 ao Pré 2 — aprender brincando!</div>
     <button id="startBtn">▶️ Vamos brincar!</button>
     <div class="w-hint">🔊 Ligue o som para ouvir as vozinhas</div>
   </div>
@@ -276,7 +284,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
     <div class="home-sub"><span class="star-chip" id="starTotal">⭐ 0</span><span id="childHello"></span></div>
     <div id="trilha" class="trilha"></div>
   </div>
-  <button class="parent-dot" id="parentDot" aria-label="Área dos pais">👨‍👩‍</button>
+  <button class="parent-dot" id="parentDot" aria-label="Área dos pais">👨‍‍</button>
 </section>
 
 <section id="game" class="screen hidden">
@@ -314,7 +322,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
     <div class="dip-top">🎓🏆🎓</div>
     <div class="dip-title">Diploma Mágico</div>
     <div class="dip-text">Parabéns, <b id="dipName">campeão</b>!</div>
-    <div class="dip-sub">Você completou toda a Trilha Mágica!<br>
+    <div class="dip-sub">Você completou toda a Trilha Mágica,<br>do Maternal 1 ao Pré 2!<br>
     Você conhece os números, as letras, as formas,<br>as cores, os animais e as palavras!</div>
     <div class="dip-stars">⭐⭐⭐⭐⭐</div>
     <div class="dip-date" id="dipDate"></div>
@@ -336,7 +344,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 
 <div id="pGate" class="overlay hidden">
   <div class="p-card center">
-    <div class="p-title">👨‍‍ Área dos Pais</div>
+    <div class="p-title">👨‍👩‍ Área dos Pais</div>
     <p class="p-note">Para entrar, responda:</p>
     <div class="p-q" id="pQ"></div>
     <div class="p-opts" id="pOpts"></div>
@@ -347,7 +355,7 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 <div id="pPanel" class="overlay hidden">
   <div class="p-card">
     <div class="p-head">
-      <div class="p-title">👨‍👩‍ Área dos Pais</div>
+      <div class="p-title">👨‍‍ Área dos Pais</div>
       <button class="p-x" id="pClose">✖</button>
     </div>
 
@@ -368,6 +376,16 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
     </div>
     <p class="p-note">Quando o tempo termina, o app avisa com carinho que é hora de descansar. Para continuar, o adulto segura o botão por 3 segundos.</p>
 
+    <div class="p-sec">📚 Metodologia</div>
+    <p class="p-note">Atividades alinhadas aos <b>campos de experiência da BNCC</b>, com aprendizagem pela brincadeira, autonomia (inspiração Montessori), consciência fonológica e reforço positivo. A dificuldade se adapta ao desempenho — a criança aprende sozinha!</p>
+    <ul class="tips">
+      <li>👶 Maternal 1 (2–3 anos): sensações, sons e movimento</li>
+      <li>🐣 Maternal 2 (3 anos): vocabulário, cores e formas</li>
+      <li>🐥 Maternal 3 (4 anos): contagem, vogais e rimas</li>
+      <li>🦆 Pré 1 (4–5 anos): sílabas, leitura e sequências</li>
+      <li>🦉 Pré 2 (5–6 anos): palavras grandes e adição</li>
+    </ul>
+
     <div class="p-sec">🗣️ Voz do aplicativo</div>
     <div class="voice-box">
       <select id="voiceSel" class="voice-sel"></select><br>
@@ -387,18 +405,18 @@ body{font-family:'Fredoka',system-ui,sans-serif;color:var(--ink);
 
     <div class="p-sec">🗺️ Jornada e progresso</div>
     <div class="btn-row">
-      <button id="unlockAll" class="big-btn green small">🔓 Liberar todos os níveis</button>
+      <button id="unlockAll" class="big-btn green small">🔓 Liberar todas as etapas</button>
       <button id="resetProg" class="big-btn danger small">🔄 Recomeçar jornada</button>
     </div>
-    <p class="p-note">A dificuldade de cada atividade sobe e desce sozinha, conforme os acertos da criança.</p>
+    <p class="p-note">No Maternal 1, a atividade só completa tocando em TODOS os elementos. Se a criança parar por 15s, o Léo repete a instrução sozinho.</p>
     <div id="progBox" style="margin-top:2vmin"></div>
 
     <div class="p-sec">💡 Dicas</div>
     <ul class="tips">
-      <li>👉 No Nível 1, a atividade só completa quando a criança toca em TODOS os elementos.</li>
-      <li>🎓 Completando toda a trilha, a criança ganha um Diploma Mágico — tire um print!</li>
-      <li>⏰ Defina o tempo de uso para criar uma rotina saudável de brincadeira.</li>
-      <li>Cada nível abre quando a criança completa as atividades do nível anterior.</li>
+      <li>👉 O cartão destacado com "👉 Comece aqui" é a próxima atividade recomendada.</li>
+      <li>🎓 Completando do Maternal 1 ao Pré 2, a criança ganha o Diploma Mágico!</li>
+      <li>⏰ Defina o tempo de uso para criar uma rotina saudável.</li>
+      <li>Cada etapa abre quando a criança completa as atividades da etapa anterior.</li>
       <li>10 a 15 minutos por dia é o ideal para essa idade.</li>
     </ul>
   </div>
@@ -569,9 +587,7 @@ const RealSFX={cache:{},ok:{},
  }};
 const playAnimal=n=>{SFX.ensure();RealSFX.play(n);};
 
-/* =========================================================
-   ILUSTRAÇÕES — estilo 3D FOFO (peludinhos, referência)
-   ========================================================= */
+/* ===== ILUSTRAÇÕES estilo 3D fofo ===== */
 const ART={
 'cachorro':`<svg viewBox="0 0 160 160"><defs><radialGradient id="gA" cx="50%" cy="32%" r="80%"><stop offset="0%" stop-color="#f7e3c8"/><stop offset="100%" stop-color="#dcb283"/></radialGradient></defs>
 <path d="M118 118 q16 -4 18 -18 q6 16 -8 26z" fill="#dcb283"/>
@@ -812,8 +828,14 @@ const LETTERS=[
  {l:'G',w:'Gato',e:'🐱'},{l:'L',w:'Leão',e:'🦁'},{l:'M',w:'Maçã',e:'🍎'},
  {l:'O',w:'Ovo',e:'🥚'},{l:'P',w:'Pato',e:'🦆'},{l:'S',w:'Sapo',e:'🐸'},
  {l:'T',w:'Tartaruga',e:'🐢'},{l:'U',w:'Uva',e:'🍇'},{l:'V',w:'Vaca',e:'🐮'}];
+const VOWELS=[
+ {l:'A',it:[{w:'Abelha',e:'🐝'},{w:'Avião',e:'✈️'},{w:'Árvore',e:'🌳'},{w:'Aranha',e:'🕷️'},{w:'Anel',e:'💍'}]},
+ {l:'E',it:[{w:'Elefante',e:'🐘'},{w:'Estrela',e:'⭐'},{w:'Escova',e:'🪥'},{w:'Escola',e:'🏫'}]},
+ {l:'I',it:[{w:'Igreja',e:'⛪'},{w:'Iguana',e:'🦎'},{w:'Ilha',e:'🏝️'},{w:'Iô-iô',e:'🪀'}]},
+ {l:'O',it:[{w:'Ovo',e:'🥚'},{w:'Óculos',e:'👓'},{w:'Ônibus',e:'🚌'},{w:'Ovelha',e:'🐑'}]},
+ {l:'U',it:[{w:'Uva',e:'🍇'},{w:'Urso',e:'🐻'},{w:'Unicórnio',e:'🦄'}]}];
 
-/* ===== modo conhecer (Nível 1 — toca TODOS) ===== */
+/* ===== modo conhecer (com cores e falas corrigidas) ===== */
 const EXPL_NUMS=[
  {n:1,w:'um',e:'🎈'},{n:2,w:'dois',e:'🐤'},{n:3,w:'três',e:'⭐'},
  {n:4,w:'quatro',e:'🍎'},{n:5,w:'cinco',e:'🐠'}].map(x=>({key:x.n,...x}));
@@ -827,8 +849,20 @@ const EXPL_LETTERS=[
  {l:'S',w:'Sapo',e:'🐸'},{l:'T',w:'Tartaruga',e:'🐢'},{l:'U',w:'Uva',e:'🍇'},
  {l:'V',w:'Vaca',e:'🐮'},{l:'W',w:'Wafer',e:'🧇'},{l:'X',w:'Xícara',e:'☕'},
  {l:'Y',w:'Ioga',e:'🧘'},{l:'Z',w:'Zebra',e:'🦓'}].map(x=>({key:x.l,...x}));
-const EXPL_SHAPES=SHAPES.map((s,i)=>({key:'f'+i,...s}));
-const EXPL_COLORS=COLORS.map((c,i)=>({key:'c'+i,...c}));
+const EXPL_SHAPES=[
+ {key:'f0',n:'círculo',a:'o',c:'#ff5252',svg:'<circle cx="50" cy="50" r="40"/>',say:'Esse é o círculo! Ele é redondo como uma bola!'},
+ {key:'f1',n:'quadrado',a:'o',c:'#448aff',svg:'<rect x="14" y="14" width="72" height="72" rx="10"/>',say:'Esse é o quadrado! Ele tem quatro lados iguais!'},
+ {key:'f2',n:'triângulo',a:'o',c:'#4cd964',svg:'<polygon points="50,10 92,86 8,86"/>',say:'Esse é o triângulo! Ele tem três bicos!'},
+ {key:'f3',n:'estrela',a:'a',c:'#ffc93d',svg:'<polygon points="50,5 61.2,34.6 92.8,36.1 68.1,55.9 76.5,86.4 50,69 23.5,86.4 31.9,55.9 7.2,36.1 38.8,34.6"/>',say:'Essa é a estrela! Ela brilha no céu!'},
+ {key:'f4',n:'coração',a:'o',c:'#ff7bac',svg:'<path d="M50 88 C20 62 8 42 16 26 C22 12 40 12 50 28 C60 12 78 12 84 26 C92 42 80 62 50 88 Z"/>',say:'Esse é o coração! É a forma do amor!'},
+ {key:'f5',n:'losango',a:'o',c:'#ff9838',svg:'<polygon points="50,6 92,50 50,94 8,50"/>',say:'Esse é o losango! Ele parece uma pipa!'},
+ {key:'f6',n:'retângulo',a:'o',c:'#a06bff',svg:'<rect x="8" y="24" width="84" height="52" rx="10"/>',say:'Esse é o retângulo! Ele parece uma porta!'},
+ {key:'f7',n:'oval',a:'o',c:'#7ec8ff',svg:'<ellipse cx="50" cy="50" rx="44" ry="30"/>',say:'Esse é o oval! Ele parece um ovo!'}];
+const EXPL_COLORS=COLORS.map((c,i)=>({key:'c'+i,...c,
+ say:{vermelho:'Essa é a cor vermelha! Vermelha como o morango!',azul:'Essa é a cor azul! Azul como o céu!',
+ amarelo:'Essa é a cor amarela! Amarela como o sol!',verde:'Essa é a cor verde! Verde como a grama!',
+ roxo:'Essa é a cor roxa! Roxa como a uva!',laranja:'Essa é a cor laranja! Laranja como a laranja!',
+ rosa:'Essa é a cor rosa! Rosa como a flor!',marrom:'Essa é a cor marrom! Marrom como o chocolate!'}[c.n]}));
 const NOTES=[
  {key:'do',n:'Dó',f:523.25,h:'#ff5252'},
  {key:'re',n:'Ré',f:587.33,h:'#ff9838'},
@@ -837,9 +871,10 @@ const NOTES=[
  {key:'sol',n:'Sol',f:783.99,h:'#448aff'},
  {key:'la',n:'Lá',f:880,h:'#a06bff'},
  {key:'si',n:'Si',f:987.77,h:'#ff7bac'}];
-/* Nível 1: completa só tocando em TODOS os elementos apresentados */
-const EXP_TARGET={numbers:EXPL_NUMS.length,letters:EXPL_LETTERS.length,shapes:EXPL_SHAPES.length,
+/* Maternal 1: completa só tocando em TODOS; demais etapas: meta parcial */
+const EXP_FULL={numbers:EXPL_NUMS.length,letters:EXPL_LETTERS.length,shapes:EXPL_SHAPES.length,
  animals:ANIMALS.length,colors:EXPL_COLORS.length,music:NOTES.length};
+const EXP_PART={numbers:5,letters:10,shapes:6,animals:8,colors:6,music:7};
 
 const SYL=[
  {s:'BA',it:[{w:'Banana',e:'🍌'},{w:'Balão',e:'🎈'},{w:'Bola',e:'⚽'}]},
@@ -891,49 +926,50 @@ const NUMW={m:['','um','dois','três','quatro','cinco','seis','sete','oito','nov
  f:['','uma','duas','três','quatro','cinco','seis','sete','oito','nove']};
 const PRAISE=['Muito bem!','Parabéns!','Você é demais!','Isso aí!','Que incrível!','Excelente!','Você conseguiu!'];
 const TRYAGAIN=['Tente de novo!','Quase! Vamos tentar outra vez!','Hmm, tenta outra vez!'];
-const BURST_E=['🎉','','🥳','✨','🎊',''];
+const BURST_E=['🎉','','🥳','✨','🎊','🏅'];
 
-/* ===== a trilha ===== */
+/* ===== TRILHA: 5 etapas da Educação Infantil ===== */
 const TRILHA=[
- {nome:'Nível 1',sub:'Conhecer',emoji:'👶',nodes:[
-   {id:'kNumeros',b:'explore',kind:'numbers',e:'🔢',n:'Números'},
-   {id:'kCores',b:'explore',kind:'colors',e:'🎨',n:'Cores'},
-   {id:'kFormas',b:'explore',kind:'shapes',e:'🔷',n:'Formas'},
-   {id:'kAnimais',b:'explore',kind:'animals',e:'🐶',n:'Animais'},
-   {id:'kLetras',b:'explore',kind:'letters',e:'🔤',n:'Letras'},
-   {id:'kMusica',b:'explore',kind:'music',e:'🎵',n:'Música'}]},
- {nome:'Nível 2',sub:'Descobrir',emoji:'🐣',nodes:[
-   {id:'animais',b:'animals',e:'🐶',n:'Animais'},
-   {id:'cores1',b:'colors',e:'🎨',n:'Cores',t0:0,t1:1},
-   {id:'formas',b:'shapes',e:'🔷',n:'Formas'},
-   {id:'bolhas',b:'bubbles',e:'🫧',n:'Bolhas'}]},
- {nome:'Nível 3',sub:'Explorar',emoji:'🐥',nodes:[
-   {id:'sombras',b:'shadows',e:'🐾',n:'Sombras'},
-   {id:'contar1',b:'count',e:'🔢',n:'Contar',t0:0,t1:1},
-   {id:'cores2',b:'colors',e:'🌈',n:'Mais Cores',t0:1,t1:1},
-   {id:'vogais',b:'vowels',e:'🔤',n:'Vogais'}]},
- {nome:'Nível 4',sub:'Primeiras Letras',emoji:'🦆',nodes:[
-   {id:'letras',b:'letters',e:'🅰️',n:'Letras',t0:0,t1:1},
-   {id:'silaba',b:'sylStart',e:'🍌',n:'Sílabas',t0:0,t1:1},
-   {id:'ler',b:'read',e:'📖',n:'Ler Figuras'},
-   {id:'contar2',b:'count',e:'🧮',n:'Contar Mais',t0:1,t1:2}]},
- {nome:'Nível 5',sub:'Formar Palavras',emoji:'🦉',nodes:[
-   {id:'formar',b:'build',e:'🧩',n:'Formar Palavras',t0:0,t1:2},
-   {id:'achar',b:'findWord',e:'🔎',n:'Achar Palavras'},
-   {id:'rimas',b:'rimas',e:'🎵',n:'Rimas'},
-   {id:'silaba2',b:'sylStart',e:'🎯',n:'Sílabas Difíceis',t0:1,t1:1}]}];
+ {nome:'Maternal 1',sub:'2 a 3 anos • Sensações e Movimento',emoji:'👶',nodes:[
+   {id:'m1animais',b:'explore',kind:'animals',e:'🐶',n:'Animais'},
+   {id:'m1cores',b:'explore',kind:'colors',e:'🎨',n:'Cores'},
+   {id:'m1formas',b:'explore',kind:'shapes',e:'🔷',n:'Formas'},
+   {id:'m1musica',b:'explore',kind:'music',e:'🎵',n:'Música'},
+   {id:'m1bolhas',b:'bubbles',e:'🫧',n:'Bolhas'}]},
+ {nome:'Maternal 2',sub:'3 anos • Descobertas',emoji:'🐣',nodes:[
+   {id:'m2numeros',b:'explore',kind:'numbers',e:'🔢',n:'Números'},
+   {id:'m2letras',b:'explore',kind:'letters',e:'🔤',n:'Letras'},
+   {id:'m2sombras',b:'shadows',e:'🐾',n:'Sombras'},
+   {id:'m2cores',b:'colors',e:'🎨',n:'Cores',t0:0,t1:1},
+   {id:'m2formas',b:'shapes',e:'🔷',n:'Formas'}]},
+ {nome:'Maternal 3',sub:'4 anos • Sons e Letras',emoji:'🐥',nodes:[
+   {id:'m3animais',b:'animals',e:'🐶',n:'Animais'},
+   {id:'m3contar',b:'count',e:'🔢',n:'Contar',t0:0,t1:1},
+   {id:'m3vogais',b:'vowels',e:'🅰️',n:'Vogais'},
+   {id:'m3rimas',b:'rimas',e:'🎵',n:'Rimas'},
+   {id:'m3letras',b:'letters',e:'🔤',n:'Letras',t0:0,t1:1}]},
+ {nome:'Pré 1',sub:'4 a 5 anos • Sílabas e Números',emoji:'🦆',nodes:[
+   {id:'p1silaba',b:'sylStart',e:'🍌',n:'Sílabas',t0:0,t1:1},
+   {id:'p1formar',b:'build',e:'🧩',n:'Formar Palavras',t0:0,t1:1},
+   {id:'p1achar',b:'findWord',e:'🔎',n:'Ler e Achar'},
+   {id:'p1ler',b:'read',e:'📖',n:'Ler Figuras'},
+   {id:'p1seq',b:'seq',e:'🔢',n:'Sequência',t0:0,t1:0}]},
+ {nome:'Pré 2',sub:'5 a 6 anos • Leitura e Matemática',emoji:'🦉',nodes:[
+   {id:'p2formar',b:'build',e:'🧩',n:'Palavras Grandes',t0:1,t1:2},
+   {id:'p2soma',b:'soma',e:'➕',n:'Somar',t0:0,t1:1},
+   {id:'p2contar',b:'count',e:'🔢',n:'Contar Mais',t0:1,t1:2},
+   {id:'p2seq',b:'seq',e:'🔢',n:'Sequência+',t0:1,t1:1},
+   {id:'p2silaba',b:'sylStart',e:'🎯',n:'Sílabas Difíceis',t0:1,t1:1}]}];
 const nodeById=id=>{for(const lv of TRILHA)for(const n of lv.nodes)if(n.id===id)return n;return null;};
 
-/* ===== progresso ===== */
+/* ===== progresso (migração v3 limpa) ===== */
 const Prog={
- d:{name:'',unlocked:1,nodes:{}},
+ d:{name:'',unlocked:1,nodes:{},v:3},
  load(){
-   try{const s=JSON.parse(localStorage.getItem('mm_prog'));
-     if(s)this.d={name:'',unlocked:1,nodes:{},...s};}catch(e){}
-   if(!this.d.v){
-     if(this.d.unlocked>1||Object.keys(this.d.nodes||{}).length){
-       this.d.unlocked=Math.min((this.d.unlocked||1)+1,TRILHA.length);}
-     this.d.v=2;this.save();}
+   let old=null;try{old=JSON.parse(localStorage.getItem('mm_prog'));}catch(e){}
+   if(old&&old.v===3){this.d=Object.assign({name:'',unlocked:1,nodes:{}},old);}
+   else{this.d={name:(old&&old.name)||'',unlocked:1,nodes:{}};}
+   this.d.v=3;
  },
  save(){try{localStorage.setItem('mm_prog',JSON.stringify(this.d));}catch(e){}},
  node(id){return this.d.nodes[id]||(this.d.nodes[id]={p:0,a:0,f:0,tier:null});},
@@ -950,7 +986,7 @@ Prog.load();
 /* ===== estado ===== */
 const screens={home:$('#home'),game:$('#game'),win:$('#win')};
 const show=n=>{for(const k in screens)screens[k].classList.toggle('hidden',k!==n);};
-const G={base:null,nodeId:null,kind:null,round:0,total:5,locked:false,firstTry:true,sa:0,sf:0,tier:0,prompt:'',winSay:'',playSound:null,bMiss:0,bi:0,bub:null,expFound:null,expTarget:0,confTimer:null,sessionStart:null,seq:0};
+const G={base:null,nodeId:null,kind:null,levelIdx:0,round:0,total:5,locked:false,firstTry:true,sa:0,sf:0,tier:0,prompt:'',winSay:'',playSound:null,bMiss:0,bi:0,bub:null,expFound:null,expTarget:0,confTimer:null,sessionStart:null,lastAct:0,seq:0};
 
 /* ===== trilha na tela ===== */
 function renderTrilha(){
@@ -985,7 +1021,7 @@ function renderTrilha(){
        SFX.ensure();
        if(open){SFX.pop();startGame(nd.id);}
        else{SFX.bad();b.classList.add('wrong');setTimeout(()=>b.classList.remove('wrong'),500);
-         VOICE.say('Primeiro complete o nível anterior!');}});
+         VOICE.say('Primeiro complete a etapa anterior!');}});
      grid.appendChild(b);});
    sec.appendChild(grid);box.appendChild(sec);});
 }
@@ -993,10 +1029,10 @@ function renderTrilha(){
 /* ===== boas-vindas ===== */
 $('#startBtn').addEventListener('click',()=>{
  SFX.ensure();SFX.good();
- G.sessionStart=Date.now();
+ G.sessionStart=Date.now();G.lastAct=Date.now();
  $('#welcome').classList.add('bye');
  show('home');renderTrilha();
- setTimeout(()=>VOICE.say('Olá! Eu sou o Léo! Complete as brincadeiras para abrir novos níveis!'),600);
+ setTimeout(()=>VOICE.say('Olá! Eu sou o Léo! Complete as brincadeiras para abrir novas etapas!'),600);
 });
 
 /* ===== fluxo ===== */
@@ -1004,9 +1040,11 @@ function startGame(nodeId){
  const nd=nodeById(nodeId);if(!nd)return;
  G.seq++;
  G.nodeId=nodeId;G.base=nd.b;G.kind=nd.kind||null;
- G.round=0;G.locked=false;G.firstTry=true;
+ G.levelIdx=TRILHA.findIndex(lv=>lv.nodes.some(n=>n.id===nodeId));
+ G.round=0;G.locked=false;G.firstTry=true;G.lastAct=Date.now();
  G.sa=0;G.sf=0;G.winSay='';G.playSound=null;
- G.expFound=new Set();G.expTarget=EXP_TARGET[nd.kind]||0;
+ G.expFound=new Set();
+ G.expTarget=nd.b==='explore'?(G.levelIdx===0?EXP_FULL[nd.kind]:EXP_PART[nd.kind]):0;
  G.tier=Prog.getTier(nodeId,nd.t0||0,nd.t1!=null?nd.t1:(nd.t0||0));
  hideBurst();show('game');buildHud();nextRound();
 }
@@ -1027,15 +1065,25 @@ function nextRound(){
  G.locked=false;G.firstTry=true;
  const f={animals:qAnimals,colors:qColors,shapes:qShapes,count:qCount,shadows:qShadows,
    letters:qLetters,bubbles:startBubbles,vowels:qVowels,sylStart:qSylStart,read:qRead,
-   findWord:qFindWord,build:qBuild,rimas:qRhymes,explore:qExplore};
+   findWord:qFindWord,build:qBuild,rimas:qRhymes,explore:qExplore,seq:qSeq,soma:qSoma};
  if(f[G.base])f[G.base]();
 }
 function setPrompt(t){G.prompt=t;$('#promptText').textContent=t;setTimeout(()=>VOICE.say(t),420);}
-$('#prompt').addEventListener('click',()=>{SFX.ensure();VOICE.say(G.prompt);});
+$('#prompt').addEventListener('click',()=>{SFX.ensure();G.lastAct=Date.now();VOICE.say(G.prompt);});
+
+/* se a criança parar 15s, o Léo repete a instrução sozinho */
+$('#stage').addEventListener('pointerdown',()=>{G.lastAct=Date.now();},true);
+setInterval(()=>{
+ const gEl=screens.game;
+ if(gEl&&!gEl.classList.contains('hidden')&&!G.locked&&G.prompt&&G.lastAct&&Date.now()-G.lastAct>15000){
+   G.lastAct=Date.now();
+   VOICE.say(G.prompt);
+ }
+},5000);
 
 function answer(btn,isRight,setWin){
  if(G.locked||btn.classList.contains('disabled'))return;
- SFX.ensure();
+ SFX.ensure();G.lastAct=Date.now();
  if(isRight){
    G.locked=true;btn.classList.add('right');
    if(setWin)setWin();
@@ -1065,7 +1113,7 @@ function mkGrid(parent,extra=''){const g=document.createElement('div');g.classNa
 function mkOpt(){const b=document.createElement('button');b.className='opt';return b;}
 function resetStage(){const s=$('#stage');s.className='';s.innerHTML='';return s;}
 
-/* --- Nível 1: conhecer (toca TODOS) --- */
+/* --- conhecer --- */
 function qExplore(){
  const K=G.kind;
  const seq=G.seq;
@@ -1113,7 +1161,7 @@ function qExplore(){
 }
 function expTap(b,it,K,disp,seq){
  if(G.locked)return;
- SFX.ensure();SFX.pop();
+ SFX.ensure();SFX.pop();G.lastAct=Date.now();
  b.style.animation='none';void b.offsetWidth;b.style.animation='winJump .6s ease';
  const isNew=!G.expFound.has(it.key);
  if(isNew){
@@ -1151,6 +1199,7 @@ function expTap(b,it,K,disp,seq){
  }
 }
 
+/* --- quiz --- */
 function qAnimals(){
  const pool=shuffle(ANIMALS),target=pool[0],opts=shuffle(pool.slice(0,4));
  const stage=resetStage();
@@ -1212,6 +1261,66 @@ function qCount(){
        :`São ${item.f?NUMW.f[n]:NUMW.m[n]} ${item.p}! Muito bem!`;}));
    nums.appendChild(b);});
  wrap.appendChild(box);wrap.appendChild(nums);stage.appendChild(wrap);
+}
+/* --- sequência numérica --- */
+function qSeq(){
+ const hard=G.tier>=1;
+ const lo=hard?ri(1,5):ri(1,2);
+ const four=[lo,lo+1,lo+2,lo+3];
+ const miss=ri(0,3);
+ const ans=four[miss];
+ const stage=resetStage();
+ setPrompt('Qual número está faltando?');
+ const wrap=document.createElement('div');wrap.className='v-wrap';
+ const card=document.createElement('div');card.className='seq-card';
+ four.forEach((n,i)=>{
+   const d=document.createElement('div');d.className='seq-box'+(i===miss?' miss':'');
+   d.textContent=i===miss?'?':n;
+   card.appendChild(d);});
+ wrap.appendChild(card);
+ const dums=shuffle(Array.from({length:hard?9:6},(_,i)=>i+1).filter(x=>!four.includes(x))).slice(0,2);
+ const opts=shuffle([ans,...dums]);
+ const row=document.createElement('div');row.className='nums';
+ opts.forEach((n,i)=>{
+   const b=document.createElement('button');b.className='num-btn';b.textContent=n;
+   b.style.animationDelay=(.3+i*.09)+'s';
+   b.addEventListener('click',()=>answer(b,n===ans,()=>{
+     G.winSay=`Isso! É o ${NUMW.m[ans]}! Muito bem!`;
+     const m=card.querySelector('.miss');
+     if(m){m.textContent=ans;m.classList.add('filled2');}
+   }));
+   row.appendChild(b);});
+ wrap.appendChild(row);stage.appendChild(wrap);
+}
+/* --- adição com figurinhas --- */
+function qSoma(){
+ const item=pick(COUNT_ITEMS);
+ const a=ri(1,G.tier>=1?4:3), b=ri(1,G.tier>=1?3:2);
+ const total=a+b;
+ const stage=resetStage();
+ setPrompt(`Quant${item.f?'as':'os'} ${item.p} temos no total?`);
+ const wrap=document.createElement('div');wrap.className='v-wrap';
+ const card=document.createElement('div');card.className='sum-card';
+ const g1=document.createElement('div');g1.className='sum-g';
+ for(let i=0;i<a;i++)g1.innerHTML+=`<span style="animation-delay:${i*.1}s">${item.e}</span>`;
+ const plus=document.createElement('div');plus.className='sum-op';plus.textContent='+';
+ const g2=document.createElement('div');g2.className='sum-g';
+ for(let i=0;i<b;i++)g2.innerHTML+=`<span style="animation-delay:${(a+i)*.1}s">${item.e}</span>`;
+ const eq=document.createElement('div');eq.className='sum-op';eq.textContent='=?';
+ card.appendChild(g1);card.appendChild(plus);card.appendChild(g2);card.appendChild(eq);
+ wrap.appendChild(card);
+ const dums=shuffle(Array.from({length:9},(_,i)=>i+1).filter(x=>x!==total)).slice(0,2);
+ const opts=shuffle([total,...dums]);
+ const row=document.createElement('div');row.className='nums';
+ opts.forEach((n,i)=>{
+   const b=document.createElement('button');b.className='num-btn';b.textContent=n;
+   b.style.animationDelay=(.3+i*.09)+'s';
+   b.addEventListener('click',()=>answer(b,n===total,()=>{
+     G.winSay=`${a} mais ${b} são ${NUMW.m[total]}! Muito bem!`;
+     eq.textContent=`=${total}`;
+   }));
+   row.appendChild(b);});
+ wrap.appendChild(row);stage.appendChild(wrap);
 }
 function qShadows(){
  const pool=shuffle(ANIMALS),target=pool[0],opts=shuffle(pool.slice(0,4));
@@ -1342,7 +1451,7 @@ function qBuild(){
    t.style.animationDelay=(.3+i*.09)+'s';
    t.addEventListener('click',()=>{
      if(G.locked||t.dataset.used)return;
-     SFX.ensure();
+     SFX.ensure();G.lastAct=Date.now();
      if(syl===word.sy[G.bi]){
        t.dataset.used='1';t.classList.add('used');
        slotEls[G.bi].textContent=syl;slotEls[G.bi].classList.add('filled');
@@ -1401,7 +1510,7 @@ function startBubbles(){
 }
 function popBubble(w,seq){
  if(w.dataset.done||G.locked)return;w.dataset.done='1';
- SFX.bubble();G.sa++;G.sf++;
+ SFX.bubble();G.sa++;G.sf++;G.lastAct=Date.now();
  w.querySelector('.bubble').classList.add('boom');
  w.style.animationPlayState='paused';
  const fx=document.createElement('span');fx.className='popfx';fx.textContent='✨';w.appendChild(fx);
@@ -1424,14 +1533,14 @@ function celebrate(){
    Prog.d.unlocked++;Prog.save();newLevel=TRILHA[li+1];}
  SFX.good();setTimeout(()=>SFX.star(),400);confetti(110);
  clearInterval(G.confTimer);G.confTimer=setInterval(()=>confetti(16),1300);
- $('#winEmoji').textContent=pick(['🐰','','🐶','','🦄','','🐵','']);
+ $('#winEmoji').textContent=pick(['🐰','🦁','','🐸','','🐼','','🦉']);
  const row=$('#winStars');row.innerHTML='';
  for(let i=0;i<5;i++){const s=document.createElement('span');s.textContent='⭐';
    s.style.animationDelay=(.25+i*.18)+'s';row.appendChild(s);}
  const nm=Prog.d.name?`, ${Prog.d.name}`:'';
  if(newLevel){
-   $('#winText').textContent=`${TRILHA[li].nome} completo! Você abriu o ${newLevel.nome}! 🎉`;
-   setTimeout(()=>VOICE.say(`Incrível${nm}! Você completou o nível e desbloqueou ${newLevel.nome} ${newLevel.sub}!`),500);
+   $('#winText').textContent=`${TRILHA[li].nome} completo! Você abriu ${newLevel.nome}! 🎉`;
+   setTimeout(()=>VOICE.say(`Incrível${nm}! Você completou a etapa e desbloqueou ${newLevel.nome}!`),500);
  }else if(G.base==='explore'){
    $('#winText').textContent='Você conheceu tudo! 🎉';
    setTimeout(()=>VOICE.say(`Parabéns${nm}! Que demais! Você conheceu tudo!`),500);
@@ -1452,7 +1561,7 @@ function celebrate(){
      $('#dipDate').textContent='🗓️ '+new Date().toLocaleDateString('pt-BR');
      $('#diploma').classList.remove('hidden');
      confetti(140);
-     VOICE.say(`Parabéns${nm}! Você completou toda a Trilha Mágica! Você é demais!`);
+     VOICE.say(`Parabéns${nm}! Você completou toda a Trilha Mágica, do Maternal 1 ao Pré 2! Você é demais!`);
    },1600);
  }
 }
@@ -1539,7 +1648,7 @@ $('#limitSel').addEventListener('change',()=>{
  toast('Tempo de uso salvo! ⏰');});
 $('#unlockAll').addEventListener('click',()=>{
  Prog.d.unlocked=TRILHA.length;Prog.save();renderTrilha();renderProg();
- toast('Todos os níveis liberados!');});
+ toast('Todas as etapas liberadas!');});
 let resetArm=false;
 $('#resetProg').addEventListener('click',()=>{
  if(!resetArm){resetArm=true;$('#resetProg').textContent='Tem certeza? Toque de novo!';
